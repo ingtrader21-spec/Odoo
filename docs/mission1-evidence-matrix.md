@@ -1,6 +1,6 @@
 # Mission 1 — evidence matrix
 
-Branch `mission/odoo-mission1-foundation-20260918`, base parent `7a209c310f1940084ff9b6b4cdc4d83f1b1afe4e` (PR #142 certified candidate), PR (to be opened).
+Branch `mission/odoo-mission1-foundation-20260918`, base parent `7a209c310f1940084ff9b6b4cdc4d83f1b1afe4e` (PR #142 certified candidate), PR https://github.com/ingtrader21-spec/Odoo/pull/143 (#143, base codex/cross-repo-authority-20260916, MERGEABLE/CLEAN, review pending).
 Every row names the command that produced it; complete outputs are preserved under `artifacts/`.
 
 | Gate | Requirement | Command | Local result (Windows) | Authority |
@@ -25,9 +25,17 @@ Every row names the command that produced it; complete outputs are preserved und
 | Security gates | integration boundary, mission security, authority matrix, API contracts, shared contract, foundation | `artifacts/mission1-security-recheck.txt` | all exit 0 | GREEN |
 | Odoo/PostgreSQL runtime | Odoo 19 module suite | Linux CI only | — | see CI section |
 
-## Linux CI
+## Linux CI on the exact Mission-1 SHA `623ee8046ac76397e758f302b0fe32962e798008`
 
-Pending: the branch is pushed and the Mission-1 PR opened after this file is committed; results are appended in the sealing commit.
+| Workflow | Conclusion | Run |
+| --- | --- | --- |
+| Odoo Addons CI (source head, merge result, Odoo 19 + PostgreSQL runtime, isolated source tests, Mission-1 gate) | success | 35392281512 |
+| Security gates (secret-and-source-security, dependency-review) | success | 35392281440 |
+| Production container CI (digest-pinned image build and scan) | success | 35392281478 |
+| calling-contract-pin | success | 35392281531 |
+| Codestra deploy readiness (pre-transfer reusable-workflow owner; fails on main too; not a required context) | failure | 35392281492 |
+
+Odoo 19 + PostgreSQL runtime suite: **892 tests, 0 failed, 0 errors** (Odoo Addons CI run 35392281512: Validate Odoo source head, Validate Odoo merge result, Test Odoo 19 and PostgreSQL runtime all success). Isolated source tests (Linux): **223 run, 0 failures, 0 errors (source head and merge result)**.
 
 ## Counts
 

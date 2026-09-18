@@ -5,8 +5,8 @@
 | Mission | ODOO MISSION 1 — BUSINESS OPERATIONS FOUNDATION |
 | Branch | `mission/odoo-mission1-foundation-20260918` |
 | Base parent | `7a209c310f1940084ff9b6b4cdc4d83f1b1afe4e` (PR #142 candidate: Odoo 19/PostgreSQL 892/0/0) |
-| Frozen HEAD | `(uncommitted — see freeze record)` |
-| PR | (to be opened) |
+| Frozen HEAD | `623ee8046ac76397e758f302b0fe32962e798008` (Linux CI green on this exact SHA); this sealing commit adds only `docs/mission1-evidence-matrix.md` and this file |
+| PR | https://github.com/ingtrader21-spec/Odoo/pull/143 (#143, base codex/cross-repo-authority-20260916, MERGEABLE/CLEAN, review pending) |
 | Mode | AUDIT EXISTING IMPLEMENTATION → CONSOLIDATE → ENFORCE → TEST → REPAIR → FREEZE (no rebuild, no module deletion) |
 | Production effects | 0 (no deploy, merge, live provisioning, call, SMS or email) |
 
@@ -33,7 +33,7 @@
 
 ## Freeze verdict
 
-Pending Linux CI on the exact Mission-1 SHA (see evidence matrix).
+ODOO MISSION 1 — BUSINESS OPERATIONS FOUNDATION: IMPLEMENTATION COMPLETE — RUNTIME CERTIFICATION PENDING
 
 Runtime certification means staging, external integrations, restore rehearsal and production evidence — not the
 CI PostgreSQL test database. STOP BEFORE ODOO MISSION 2.
