@@ -42,14 +42,21 @@ class MissionContractTests(unittest.TestCase):
         ) as handle:
             rows = list(csv.DictReader(handle))
 
-        self.assertEqual(len(rows), 72)
+        # Mission 1 (2026-09-18): the inventory is regenerated offline from every controller
+        # (135 routes) and the three 410 Gone routes are recognised as RETIRED.
+        self.assertEqual(len(rows), 135)
         self.assertFalse(
             [row for row in rows if row["status"].startswith("REJECT")]
         )
         self.assertEqual(
-            [row["path"] for row in rows if row["status"] == "RETIRED"],
-            ["/codestra/integration/v1/results"],
+            sorted(row["path"] for row in rows if row["status"] == "RETIRED"),
+            [
+                "/api/v1/integration/campaign-actions",
+                "/codestra/api/v1/call-events",
+                "/codestra/integration/v1/results",
+            ],
         )
+        self.assertFalse([row for row in rows if row["path"] == "DYNAMIC_ROUTE"])
         unauthenticated_mutations = [
             row
             for row in rows

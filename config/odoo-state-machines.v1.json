@@ -1,0 +1,304 @@
+{
+  "schema_version": 1,
+  "policy": {
+    "states_must_match_model_selection": true,
+    "explicit_transition_tables_must_match_code": true,
+    "boolean_combinations_may_not_replace_a_state": true
+  },
+  "machines": {
+    "campaign_lifecycle": {
+      "model": "cc.campaign",
+      "field": "lifecycle_state",
+      "module": "codestra_cc_core",
+      "code_constant": "CAMPAIGN_LIFECYCLE",
+      "transition_constant": "SAFE_LIFECYCLE_TRANSITIONS",
+      "owner": "canonical",
+      "states": [
+        "draft",
+        "design_pending",
+        "design_ready",
+        "approval_pending",
+        "approved",
+        "provisioning",
+        "provisioned_disabled",
+        "testing",
+        "staging_ready",
+        "activation_pending",
+        "active",
+        "blocked",
+        "failed",
+        "rollback_pending",
+        "rolled_back",
+        "archived"
+      ]
+    },
+    "campaign_effective_state": {
+      "model": "cc.campaign",
+      "field": "effective_state",
+      "module": "codestra_campaign_control_plane",
+      "code_constant": "EFFECTIVE_STATES",
+      "command_constant": "COMMANDS",
+      "owner": "runtime_control",
+      "states": [
+        "unknown",
+        "absent",
+        "provisioned_disabled",
+        "synthetic_tested",
+        "active",
+        "disabled"
+      ],
+      "commands": {
+        "provision": {
+          "allowed": [
+            "absent",
+            "unknown",
+            "disabled"
+          ],
+          "target": "provisioned_disabled",
+          "gated": true
+        },
+        "synthetic_test": {
+          "allowed": [
+            "provisioned_disabled"
+          ],
+          "target": "synthetic_tested"
+        },
+        "activate": {
+          "allowed": [
+            "synthetic_tested",
+            "disabled"
+          ],
+          "target": "active",
+          "gated": true
+        },
+        "disable": {
+          "allowed": [
+            "active",
+            "synthetic_tested"
+          ],
+          "target": "disabled"
+        }
+      }
+    },
+    "campaign_legacy_state": {
+      "model": "call.center.campaign",
+      "field": "state",
+      "module": "call_center_campaign",
+      "owner": "compatibility",
+      "states": [
+        "draft",
+        "approved",
+        "active",
+        "paused",
+        "closed"
+      ]
+    },
+    "agent_lifecycle": {
+      "model": "codestra.agent.onboarding",
+      "field": "state",
+      "module": "codestra_agent_onboarding",
+      "owner": "canonical",
+      "states": [
+        "draft",
+        "in_review",
+        "approved",
+        "provisioning",
+        "active",
+        "offboarding",
+        "closed",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "identity_link": {
+      "model": "codestra.identity.link",
+      "field": "state",
+      "module": "codestra_identity_provisioning",
+      "owner": "canonical",
+      "states": [
+        "pending",
+        "active",
+        "suspended",
+        "terminated"
+      ]
+    },
+    "provisioning_request": {
+      "model": "codestra.provisioning.request",
+      "field": "state",
+      "module": "codestra_identity_provisioning",
+      "code_constant": "REQUEST_STATES",
+      "owner": "canonical",
+      "states": [
+        "draft",
+        "pending_approval",
+        "approved",
+        "reserving",
+        "provisioning",
+        "partially_provisioned",
+        "verification",
+        "awaiting_user_activation",
+        "active",
+        "suspended",
+        "termination_pending",
+        "terminated",
+        "failed",
+        "cancelled"
+      ],
+      "lifecycle_mapping": {
+        "CREATE": [
+          "draft"
+        ],
+        "VALIDATE": [
+          "pending_approval",
+          "approved"
+        ],
+        "DISPATCH": [
+          "reserving",
+          "provisioning",
+          "partially_provisioned"
+        ],
+        "STATUS": [
+          "verification",
+          "awaiting_user_activation",
+          "active"
+        ],
+        "RECONCILE": [
+          "suspended",
+          "failed"
+        ],
+        "DISABLE": [
+          "termination_pending",
+          "terminated",
+          "cancelled"
+        ]
+      }
+    },
+    "provisioning_step": {
+      "model": "codestra.provisioning.step",
+      "field": "state",
+      "module": "codestra_identity_provisioning",
+      "owner": "canonical",
+      "states": [
+        "pending",
+        "reserved",
+        "running",
+        "succeeded",
+        "failed",
+        "blocked",
+        "retry_scheduled",
+        "verification_pending",
+        "verified",
+        "skipped",
+        "compensated",
+        "cancelled"
+      ]
+    },
+    "provisioning_legacy_request": {
+      "model": "call.center.provisioning.request",
+      "field": "state",
+      "module": "call_center_orchestration",
+      "owner": "compatibility",
+      "states": [
+        "draft",
+        "approved",
+        "queued",
+        "completed",
+        "failed",
+        "revoked"
+      ]
+    },
+    "channel_entitlement": {
+      "model": "codestra.agent.channel",
+      "field": "state",
+      "module": "codestra_identity_provisioning",
+      "owner": "canonical",
+      "states": [
+        "requested",
+        "provisioning",
+        "provisioned",
+        "effective",
+        "revoked",
+        "failed"
+      ]
+    },
+    "command_request_run": {
+      "model": "cc.campaign.provisioning.run",
+      "field": "status",
+      "module": "codestra_campaign_control_plane",
+      "code_constant": "RUN_STATUSES",
+      "owner": "canonical",
+      "states": [
+        "pending",
+        "succeeded",
+        "failed"
+      ]
+    },
+    "command_request_delivery": {
+      "model": "cc.campaign.provisioning.run",
+      "field": "delivery_state",
+      "module": "codestra_campaign_control_plane",
+      "code_constant": "RUN_DELIVERY_STATES",
+      "owner": "canonical",
+      "states": [
+        "none",
+        "queued",
+        "accepted",
+        "dead_letter"
+      ]
+    },
+    "integration_delivery": {
+      "model": "codestra.runtime.integration.outbox",
+      "field": "delivery_state",
+      "module": "call_center_campaign",
+      "owner": "canonical",
+      "states": [
+        "pending",
+        "processing",
+        "delivered",
+        "failed",
+        "dead_letter",
+        "superseded"
+      ]
+    },
+    "identity_outbox": {
+      "model": "cc.identity.outbox",
+      "field": "state",
+      "module": "codestra_cc_identity",
+      "owner": "channel_queue",
+      "states": [
+        "pending_dispatch",
+        "dispatched",
+        "readback_matched",
+        "mismatch",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "integration_delivery_legacy": {
+      "model": "codestra.integration.delivery",
+      "field": "state",
+      "module": "codestra_integration_hub",
+      "owner": "retire_candidate",
+      "states": [
+        "pending",
+        "processing",
+        "succeeded",
+        "failed",
+        "abandoned"
+      ]
+    },
+    "crm_outbox_legacy": {
+      "model": "codestra.crm.outbox",
+      "field": "state",
+      "module": "codestra_campaign_crm_os",
+      "owner": "compatibility",
+      "states": [
+        "PENDING",
+        "PROCESSING",
+        "DELIVERED",
+        "RETRY",
+        "DEAD_LETTER"
+      ]
+    }
+  }
+}

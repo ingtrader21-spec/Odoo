@@ -68,6 +68,9 @@ node --experimental-vm-modules --test tests/frontend/test_call_popup_handle_call
 printf '==> Validating the Middleware and Odoo write boundary\n'
 python3 -I scripts/validate_integration_boundary.py
 
+printf '==> Validating the Mission 1 business operations foundation\n'
+python3 -I scripts/validate_mission1_foundation.py
+
 printf '==> Validating the four-repository platform control plane\n'
 python3 -I scripts/validate_platform_control_plane.py
 

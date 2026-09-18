@@ -1,0 +1,36 @@
+== python -I scripts/validate_integration_boundary.py
+INTEGRATION_BOUNDARY_PINNED_MODULES=19
+INTEGRATION_BOUNDARY_STRICT_OVERRIDES=16
+Odoo integration-boundary validation passed: only Codestra Middleware may write through approved service APIs or the ORM bridge.
+exit=0
+== python -I scripts/validate_mission1_foundation.py
+MODULE_AUTHORITY=PASS modules=81 canonical=16 compatibility=3 retire_candidate=1 supporting=54 transitional=7
+DOMAIN_OWNERSHIP=PASS domains=7
+ROLE_FOUNDATION=PASS canonical_roles=5
+CONTROLLER_GOVERNANCE=PASS routes=135 middleware_only=80
+PROVIDER_PATHS=PASS outbound_sites=11 direct_provider_transport=0
+STATE_MODELS=PASS machines=15
+ODOO_MISSION1_FOUNDATION=PASS
+exit=0
+== python -I scripts/validate_mission_security.py
+LIVE_CAPABILITIES_CLOSED=9
+MISSION_DIRECT_NETWORK_WRITERS=0
+MISSION_UNRESTRICTED_SUDO=0
+MISSION_PUBLIC_CONTROLLERS=0
+MISSION_SECURITY_SOURCE_GATE=PASS
+exit=0
+== python -I scripts/validate_campaign_authority_matrix.py
+campaign authority matrix: PASS (10 roles, all groups resolve, no MISSING statuses)
+exit=0
+== python -I scripts/validate_api_contracts.py
+CANONICAL_API_ENDPOINTS=21
+CANONICAL_API_SOURCE_INVENTORY=PASS
+CANONICAL_API_RUNTIME_CERTIFICATION=BLOCKED
+exit=0
+== python -I scripts/validate_odoo_shared_contract.py
+ODOO_SHARED_CONTRACT_SHA256=874711f3a8c38bfb2c69169d5f7c1717897d48419ce60bf5649a899f023e1e03
+ODOO_SHARED_CONTRACT_OPERATIONS=28
+ODOO_SHARED_CONTRACT_SERVED=24
+ODOO_SHARED_CONTRACT_UNSERVED=4
+ODOO_SHARED_CONTRACT_PARITY=PASS
+exit=0

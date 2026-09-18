@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "canonical_roles": {
+    "SUPER_ADMIN": {
+      "odoo_groups": [
+        "codestra_cc_security.group_cc_global_administrator",
+        "codestra_cc_security.group_cc_technical_administrator"
+      ],
+      "scope": "governed administrative visibility across companies and campaigns",
+      "workspace": "admin console",
+      "company_scope": "all",
+      "campaign_scope": "all"
+    },
+    "SUPERVISOR": {
+      "odoo_groups": [
+        "codestra_cc_security.group_cc_campaign_supervisor"
+      ],
+      "scope": "supervised campaigns",
+      "workspace": "supervisor landing",
+      "company_scope": "own business units",
+      "campaign_scope": "cc.campaign.membership (supervisor)"
+    },
+    "AGENT": {
+      "odoo_groups": [
+        "codestra_cc_security.group_cc_campaign_agent",
+        "codestra_cc_security.group_cc_senior_agent"
+      ],
+      "scope": "own assigned campaign and its business records",
+      "workspace": "agent workspace",
+      "company_scope": "own business unit",
+      "campaign_scope": "exactly one active operational membership"
+    },
+    "INTEGRATION_SERVICE": {
+      "odoo_groups": [
+        "codestra_cc_crm.group_cc_crm_service",
+        "codestra_cc_calls.group_cc_call_service",
+        "codestra_cc_mail.group_cc_mail_ingestion_service",
+        "codestra_cc_recordings.group_cc_recording_service",
+        "codestra_cc_wfm.group_cc_workforce_event_service",
+        "codestra_cc_audit.group_cc_audit_service",
+        "codestra_cc_compliance.group_cc_compliance_event_service",
+        "codestra_cc_vicidial.group_cc_telephony_readback_service"
+      ],
+      "scope": "exact machine-operation scope per service group; Middleware is the only caller",
+      "workspace": "none",
+      "company_scope": "all (domain_force bypass only for service groups)",
+      "campaign_scope": "all within the verified service scope"
+    },
+    "AUDITOR": {
+      "odoo_groups": [
+        "codestra_cc_security.group_cc_auditor"
+      ],
+      "scope": "read-only audit visibility",
+      "workspace": "audit views",
+      "company_scope": "own business units",
+      "campaign_scope": "read-only"
+    }
+  },
+  "additional_justified_roles": {
+    "QA_ANALYST": [
+      "codestra_cc_security.group_cc_quality_analyst"
+    ],
+    "WORKFORCE_ANALYST": [
+      "codestra_cc_security.group_cc_workforce_analyst"
+    ],
+    "COMPLIANCE_OFFICER": [
+      "codestra_cc_security.group_cc_compliance_officer"
+    ],
+    "CAMPAIGN_CONFIGURATION_MANAGER": [
+      "codestra_cc_security.group_cc_campaign_configuration_manager"
+    ],
+    "SCOPED_USER": [
+      "codestra_cc_security.group_cc_scoped_user"
+    ]
+  },
+  "authority_matrix": "docs/authority/odoo_campaign_access_control_matrix.csv",
+  "membership_model": "cc.campaign.membership",
+  "isolation": {
+    "campaign": "record rules on cc.campaign.scoped.mixin resolve user.cc_allowed_campaign_ids from cc.campaign.membership",
+    "company": "record rules resolve user.cc_allowed_business_unit_ids; service groups and global administrators bypass with domain_force [(1,'=',1)]",
+    "break_glass": "cc.break.glass.grant, time-boxed, audited"
+  }
+}

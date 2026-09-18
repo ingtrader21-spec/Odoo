@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import ast
+import sys
 import csv
 import hashlib
 import json
@@ -259,6 +260,54 @@ def literal(node: ast.AST) -> Any:
         return None
 
 
+def module_constants(tree: ast.Module) -> dict[str, Any]:
+    """Module-level literal assignments (``PREFIX = "/api"``, ``ROUTES = {...}``)."""
+    constants: dict[str, Any] = {}
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
+            value = literal(node.value)
+            if value is not None:
+                constants[node.targets[0].id] = value
+    return constants
+
+
+def resolve_route(node: ast.AST, constants: dict[str, Any]) -> Any:
+    """Resolve a route expression built from module constants (name, dict lookup, f-string)."""
+    value = literal(node)
+    if value is not None:
+        return value
+    if isinstance(node, ast.Name):
+        return constants.get(node.id)
+    if isinstance(node, ast.Subscript) and isinstance(node.value, ast.Name):
+        container = constants.get(node.value.id)
+        key = literal(node.slice)
+        if isinstance(container, dict) and key in container:
+            return container[key]
+        return None
+    if isinstance(node, ast.JoinedStr):
+        parts: list[str] = []
+        for piece in node.values:
+            if isinstance(piece, ast.Constant):
+                parts.append(str(piece.value))
+            elif isinstance(piece, ast.FormattedValue):
+                inner = resolve_route(piece.value, constants)
+                if not isinstance(inner, str):
+                    return None
+                parts.append(inner)
+            else:
+                return None
+        return "".join(parts)
+    if isinstance(node, ast.List):
+        items = [resolve_route(item, constants) for item in node.elts]
+        return items if all(isinstance(item, str) for item in items) else None
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in {"list", "sorted", "tuple"} and len(node.args) == 1:
+        container = resolve_route(node.args[0], constants)
+        if isinstance(container, dict):
+            return sorted(container)
+        return container
+    return None
+
+
 def reachable_function_source(
     source: str,
     tree: ast.Module,
@@ -321,16 +370,29 @@ def generate_endpoint_inventory() -> None:
             continue
         source = path.read_text(encoding="utf-8")
         tree = ast.parse(source)
+        module_level = module_constants(tree)
         for cls in [node for node in tree.body if isinstance(node, ast.ClassDef)]:
+            constants = dict(module_level)
+            for stmt in cls.body:  # class-body constants such as PATH = "/codestra/..."
+                if isinstance(stmt, ast.Assign) and len(stmt.targets) == 1 and isinstance(stmt.targets[0], ast.Name):
+                    value = literal(stmt.value)
+                    if value is not None:
+                        constants[stmt.targets[0].id] = value
             for fn in [node for node in cls.body if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))]:
                 for decorator in fn.decorator_list:
                     if not isinstance(decorator, ast.Call) or not isinstance(decorator.func, ast.Attribute) or decorator.func.attr != "route":
                         continue
-                    route_value = literal(decorator.args[0]) if decorator.args else None
+                    if decorator.args:
+                        route_value = resolve_route(decorator.args[0], constants)
+                    else:
+                        # A route-less override inherits its paths from the parent controller.
+                        bases = [getattr(base, "id", getattr(base, "attr", "")) for base in cls.bases]
+                        route_value = "INHERITED_ROUTE:" + ",".join(base for base in bases if base)
                     paths = route_value if isinstance(route_value, list) else [route_value]
                     kwargs = {kw.arg: literal(kw.value) for kw in decorator.keywords if kw.arg}
                     methods = kwargs.get("methods") or ["ANY"]
                     framework_auth = kwargs.get("auth", "user")
+                    csrf = kwargs.get("csrf")
                     fn_source = ast.get_source_segment(source, fn) or ""
                     reachable_source = reachable_function_source(source, tree, cls, fn)
                     for route in paths:
@@ -347,7 +409,10 @@ def generate_endpoint_inventory() -> None:
                             and not service_authenticated
                         )
                         sudo = ".sudo(" in reachable_source
-                        retired = "retired" in fn.name.lower() and "410" in fn_source
+                        # A retired route answers 410 either explicitly or by raising Gone.
+                        retired = ("retired" in fn.name.lower() and "410" in fn_source) or bool(
+                            re.search(r"\braise\s+(?:werkzeug\.exceptions\.)?Gone\s*\(", fn_source)
+                        )
                         if generic:
                             status = "REJECT_GENERIC_PROXY"
                         elif retired:
@@ -366,9 +431,25 @@ def generate_endpoint_inventory() -> None:
                             if service_authenticated
                             else framework_auth
                         )
+                        if framework_auth == "user":
+                            caller = "BROWSER_USER"
+                        elif service_authenticated:
+                            caller = "MIDDLEWARE_SERVICE"
+                        elif retired:
+                            caller = "NONE_RETIRED"
+                        else:
+                            caller = "PUBLIC"
+                        if re.search(r"urllib\.request|requests\.(post|get|put|patch)|\.middleware\.|middleware_client|_transport", reachable_source):
+                            downstream = "MIDDLEWARE_CLIENT"
+                        elif re.search(r"request\.env\[|self\.env\[|\.sudo\(|\.search\(|\.create\(|\.write\(", reachable_source):
+                            downstream = "ODOO_ORM"
+                        else:
+                            downstream = "NONE"
                         rows.append({
                             "method": ";".join(methods), "path": route, "module": path.parents[1].name,
-                            "controller": f"{cls.name}.{fn.name}", "auth": effective_auth, "audience": "MIDDLEWARE" if middleware_audience else "INTERNAL_OR_BROWSER",
+                            "controller": f"{cls.name}.{fn.name}", "auth": effective_auth, "csrf": "NO" if csrf is False else ("YES" if csrf else "DEFAULT"),
+                            "caller": caller, "downstream": downstream,
+                            "audience": "MIDDLEWARE" if middleware_audience else "INTERNAL_OR_BROWSER",
                             "scope": "DECLARED" if "scope" in reachable_source else "NOT_DETECTED", "request_model": "INLINE", "response_model": "INLINE",
                             "tenant_company_binding": "YES" if re.search(r"tenant|company", reachable_source, re.I) else "NO",
                             "campaign_binding": "YES" if "campaign" in reachable_source.lower() else "NO",
@@ -444,6 +525,12 @@ def generate_boundary_report() -> None:
 
 def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
+    if "--endpoints-only" in sys.argv[1:]:
+        # Offline regeneration of the controller inventory (no GitHub access).
+        generate_endpoint_inventory()
+        path = OUT / "ODOO-ENDPOINT-INVENTORY.csv"
+        print(f"GENERATED={path.relative_to(ROOT)} SHA256={hashlib.sha256(path.read_bytes()).hexdigest()}")
+        return 0
     generate_branch_ledger()
     generate_module_inventory()
     generate_endpoint_inventory()

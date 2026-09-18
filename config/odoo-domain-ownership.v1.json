@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "mission": "ODOO_MISSION_1_BUSINESS_OPERATIONS_FOUNDATION",
+  "principle": "Odoo owns business state and command intent; Middleware owns cross-system command execution, authorization, idempotency, execution audit and reconciliation; Keycloak owns identity; Kong owns gateway prerequisites; Caddy owns ingress/TLS; n8n owns approved automation execution.",
+  "domains": {
+    "campaign": {
+      "canonical_owner": {
+        "module": "codestra_cc_core",
+        "model": "cc.campaign",
+        "authority": "campaign identity, business unit/company scope, lifecycle_state, channel configuration, identifier status"
+      },
+      "storage_record": {
+        "module": "call_center_campaign",
+        "model": "call.center.campaign",
+        "authority": "physical campaign row delegated through _inherits; legacy state (draft/approved/active/paused/closed) is derived, not a competing lifecycle"
+      },
+      "runtime_control": {
+        "module": "codestra_campaign_control_plane",
+        "model": "cc.campaign",
+        "extension": true,
+        "entrypoint": "control_command",
+        "authority": "the only object that may request provisioning, synthetic test, activation, disable, reconcile or rollback; delivered pull-only through the Middleware contract"
+      },
+      "compatibility_models": [
+        "codestra.campaign.workflow",
+        "codestra.campaign.status",
+        "codestra.campaign.automation",
+        "codestra.campaign.action.service",
+        "codestra.campaign.playbook"
+      ],
+      "compatibility_modules": [
+        "codestra_campaign_crm_os",
+        "codestra_cc_campaign",
+        "codestra_staging_campaign_design",
+        "codestra_campaign_publishing"
+      ],
+      "rules": [
+        "No model other than cc.campaign may hold a second campaign lifecycle authority.",
+        "call.center.campaign automatic design provisioning stays a compatibility path: its outbox cron ships inactive and is not loaded by the manifest.",
+        "codestra.campaign.* objects in codestra_campaign_crm_os describe workflow/knowledge/KPI configuration only; they never call Middleware directly."
+      ]
+    },
+    "agent": {
+      "canonical_owner": {
+        "module": "codestra_agent_onboarding",
+        "model": "codestra.agent.onboarding",
+        "authority": "agent business lifecycle: Odoo user, company/business unit, campaign, supervisor, role, WebRTC session, channel entitlements, Middleware provisioning identity"
+      },
+      "identity_binding": {
+        "module": "codestra_identity_provisioning",
+        "model": "codestra.identity.link",
+        "authority": "binding of the Odoo user to the Keycloak subject; Keycloak remains the identity database"
+      },
+      "compatibility_models": [
+        "codestra.agent.profile",
+        "codestra.agent.performance",
+        "codestra.agent.state.event",
+        "codestra.vicidial.agent"
+      ],
+      "compatibility_modules": [
+        "codestra_campaign_crm_os",
+        "codestra_vicidial_crm"
+      ],
+      "rules": [
+        "codestra.vicidial.agent is a telephony presence projection and never provisions or authenticates an agent.",
+        "codestra.agent.profile is a CRM-OS performance profile; membership and roles resolve through cc.campaign.membership."
+      ]
+    },
+    "identity": {
+      "canonical_owner": {
+        "module": "codestra_identity_provisioning",
+        "model": "codestra.identity.link",
+        "authority": "Keycloak subject <-> Odoo user link, platform user, tenant membership and credential references (references only, never secrets)"
+      },
+      "propagation": {
+        "module": "codestra_cc_identity",
+        "model": "cc.identity.outbox",
+        "authority": "identity intent propagated to Middleware with readback matching"
+      },
+      "compatibility_models": [
+        "vicidial.identity.map",
+        "codestra.intake.identity",
+        "cc.mail.sender.identity"
+      ],
+      "compatibility_modules": [
+        "codestra_vicidial_crm",
+        "codestra_intake_leads"
+      ],
+      "rules": [
+        "Odoo never stores Keycloak credentials or acts as an identity provider; SSO routes in codestra_orbit_theme only redirect to and consume Keycloak."
+      ]
+    },
+    "call": {
+      "canonical_owner": {
+        "module": "codestra_cc_calls",
+        "model": "cc.operation.outbox",
+        "authority": "call operations (callbacks, appointments, transfers, referrals) expressed as Middleware-bound operations"
+      },
+      "projection": {
+        "module": "codestra_vicidial_crm",
+        "model": "codestra.vicidial.call",
+        "authority": "read-only telephony projection of calls, events and recordings received from Middleware"
+      },
+      "compatibility_models": [
+        "codestra.call.event",
+        "call.center.callback.task",
+        "call.center.callback.notification",
+        "codestra.callback"
+      ],
+      "compatibility_modules": [
+        "codestra_campaign_crm_os",
+        "call_center_orchestration",
+        "codestra_appointments"
+      ],
+      "rules": [
+        "A call is never placed, transferred or recorded by Odoo directly; the calling contract pin governs every telephony readback route."
+      ]
+    },
+    "channel": {
+      "canonical_owner": {
+        "module": "codestra_identity_provisioning",
+        "model": "codestra.agent.channel",
+        "authority": "agent channel entitlements (phone/webrtc/email/sms) with a deterministic state"
+      },
+      "campaign_side": {
+        "module": "codestra_cc_core",
+        "model": "cc.campaign.channel",
+        "authority": "campaign channel configuration"
+      },
+      "compatibility_models": [
+        "codestra.lead.channel.eligibility",
+        "codestra.social.channel"
+      ],
+      "compatibility_modules": [
+        "codestra_lead_automation",
+        "codestra_social_orchestration"
+      ],
+      "rules": [
+        "Channel entitlements are granted through provisioning steps only."
+      ]
+    },
+    "inbox_outbox": {
+      "canonical_owner": {
+        "module": "call_center_campaign",
+        "model": "codestra.runtime.integration.outbox",
+        "authority": "the Middleware command outbox (claim/release/renew/dead-letter) and codestra.integration.result.inbox for results; traces and nonces live beside it"
+      },
+      "channel_queues": [
+        "codestra.sms.outbox",
+        "codestra.email.outbox",
+        "cc.identity.outbox",
+        "cc.operation.outbox",
+        "codestra.lead.import.outbox"
+      ],
+      "compatibility_models": [
+        "codestra.crm.outbox",
+        "codestra.integration.delivery",
+        "codestra.integration.event",
+        "codestra.integration.idempotency"
+      ],
+      "compatibility_modules": [
+        "codestra_campaign_crm_os",
+        "codestra_integration_hub"
+      ],
+      "rules": [
+        "Every channel queue delivers through the Middleware boundary; none opens a provider connection.",
+        "codestra_integration_hub delivery/idempotency is a retire candidate and may not gain new callers."
+      ]
+    },
+    "provisioning": {
+      "canonical_owner": {
+        "module": "codestra_identity_provisioning",
+        "model": "codestra.provisioning.request",
+        "authority": "agent/user provisioning state machine with steps, reservations, verification, activation, suspension and termination"
+      },
+      "campaign_side": {
+        "module": "codestra_campaign_control_plane",
+        "model": "cc.campaign.provisioning.run",
+        "authority": "campaign provisioning runs and readback"
+      },
+      "compatibility_models": [
+        "call.center.provisioning.request",
+        "codestra.agent.provisioning.middleware.client",
+        "codestra.middleware.agent.provisioning.transport"
+      ],
+      "compatibility_modules": [
+        "call_center_orchestration"
+      ],
+      "rules": [
+        "call.center.provisioning.request is a compatibility record and never dispatches to Middleware on its own."
+      ]
+    }
+  }
+}

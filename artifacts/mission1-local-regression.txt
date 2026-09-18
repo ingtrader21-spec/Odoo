@@ -1,0 +1,30 @@
+git diff --check                                                       exit=0 :: 
+python -I -m compileall -q custom-addons scripts tests/security        exit=0 :: 
+python -I scripts/validate_calling_contract_pin.py                     exit=0 :: CALLING_CONTRACT_PIN=PASS
+python -I scripts/generate_calling_client_schema.py --check            exit=0 :: CALLING_CLIENT_SCHEMA=PASS
+python -I scripts/validate_calling_contract_usage.py                   exit=0 :: CALLING_CONTRACT_USAGE=PASS
+python -I scripts/validate_campaign_authority_matrix.py                exit=0 :: campaign authority matrix: PASS (10 roles, all groups resolve, no MISSING statuses)
+python -I scripts/validate_legacy_addon_baseline.py                    exit=0 :: CANONICAL_ADDON_BASELINE=PASS
+python -I scripts/validate_manifests.py                                exit=0 :: Manifest validation passed for 81 module(s).
+python -I scripts/validate_asset_integrity.py                          exit=0 :: REPOSITORY_BROWSER_ASSET_INTEGRITY=PASS
+node --experimental-vm-modules --test tests/frontend/test_call_popup_rpc.mjs exit=0 :: ℹ duration_ms 220.1401
+node --experimental-vm-modules --test tests/frontend/test_call_popup_handle_call.mjs exit=0 :: ℹ duration_ms 172.3713
+python -I scripts/validate_integration_boundary.py                     exit=0 :: Odoo integration-boundary validation passed: only Codestra Middleware may write through approved service APIs 
+python -I scripts/validate_mission1_foundation.py                      exit=0 :: ODOO_MISSION1_FOUNDATION=PASS
+python -I scripts/validate_platform_control_plane.py                   exit=0 :: PLATFORM_CONTROL_PLANE=PASS
+python -I scripts/validate_observability_control_plane.py              exit=0 :: OBSERVABILITY_CONTROL_PLANE=PASS
+python -I scripts/review_modules.py --strict                           exit=0 :: MODULE_REVIEW=PASS
+python -I scripts/validate_codestra_readiness.py                       exit=0 :: CODESTRA_ODOO_READINESS_VALIDATION=PASS
+python -I scripts/validate_call_center_workstreams.py                  exit=0 :: CALL_CENTER_WORKSTREAM_VALIDATION=PASS
+python -I scripts/validate_mission_coverage.py                         exit=0 :: MISSION_RUNTIME_CERTIFICATION=PENDING
+python -I scripts/validate_mission_security.py                         exit=0 :: MISSION_SECURITY_SOURCE_GATE=PASS
+python -I scripts/validate_klyrow_smtp_policy.py                       exit=0 :: KLYROW_SMTP_POLICY=PASS
+python -I scripts/validate_api_contracts.py                            exit=0 :: CANONICAL_API_RUNTIME_CERTIFICATION=BLOCKED
+python -I scripts/validate_odoo_shared_contract.py                     exit=0 :: ODOO_SHARED_CONTRACT_PARITY=PASS
+python -I scripts/generate_odoo_endpoint_catalog.py --check            exit=0 :: ODOO_ENDPOINT_CATALOG=PASS
+python -I scripts/validate_migration_contracts.py                      exit=0 :: RESTORE_REHEARSAL_GATE=BLOCKED_RUNTIME_EVIDENCE
+python -I scripts/validate_test_evidence_contracts.py                  exit=0 :: TEST_EVIDENCE_SOURCE_GATE=PASS
+python -I scripts/validate_release_policy.py                           exit=0 :: RELEASE_POLICY_SOURCE_GATE=PASS
+python -I scripts/validate_production_evidence.py --file release/production-evidence-template.json --allow-blocked-template exit=0 :: PRODUCTION_EVIDENCE_VALIDATION=PASS
+python -m unittest tests.security.test_mission1_foundation tests.security.test_mission_contracts exit=0 :: OK
+python -I scripts/run_isolated_source_tests.py                         exit=1 :: FAILED (errors=30)
