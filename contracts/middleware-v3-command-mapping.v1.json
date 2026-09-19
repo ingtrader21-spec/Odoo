@@ -1,0 +1,261 @@
+{
+  "schema_version": "1.0",
+  "contract_id": "codestra.odoo.middleware-v3-command-mapping",
+  "status": "V3_PENDING_FINAL_MIDDLEWARE_CONTRACT",
+  "V3_PENDING_FINAL_MIDDLEWARE_CONTRACT": true,
+  "runtime_apply_authorized": false,
+  "authority": {
+    "business_authority": "ingtrader21-spec/Odoo",
+    "execution_authority": "ingtrader21-spec/Middleware-",
+    "gateway_authority": "ingtrader21-spec/Kong",
+    "edge_authority": "ingtrader21-spec/Caddy",
+    "identity_authority": "ingtrader21-spec/Keycloak",
+    "middleware_source_sha": "22d023a9c65b0789a0f7ee6c28548753521a9eff",
+    "middleware_edge_contract_sha256": "be25ea3a15687616fc1a17c451bb731c9e8bb85bbbd970e563d2baedc062b99e",
+    "middleware_source_note": "MAIN_AFTER_RUNTIME_MODERNIZATION (#287 merged); deploy/public-api-route-contract.json digest unchanged since 0ed9d10"
+  },
+  "flow": {
+    "effectful_request": "odoo -> caddy -> kong -> middleware-integration-api:8095 -> odoo adapter / provider adapter",
+    "canonical_upstream": "middleware-integration-api:8095",
+    "forbidden_upstreams": [
+      "appolon-middleware-integration-api:8080",
+      "middleware:8080"
+    ],
+    "browser_privileged_direct_bridge": false,
+    "odoo_direct_provider_effects": "forbidden except the reviewed codestra_klyrow_smtp SMTP relay (owner decision, governed by scripts/validate_klyrow_smtp_policy.py)"
+  },
+  "identity": {
+    "caller_client_id": "odoo-integration",
+    "issuer": "https://auth.codestra.co/realms/codestra",
+    "audience": "middleware-api",
+    "grant_type": "client_credentials",
+    "current_scopes": [
+      "identity.request",
+      "odoo-service-jwt routes per Kong authority"
+    ],
+    "v3_scope_submit": "platform.command",
+    "v3_scope_read": "platform.command.read",
+    "v3_scope_replay": "platform.command.replay",
+    "v3_replay_realm_role": "platform-operator",
+    "idempotency_header": "Idempotency-Key",
+    "correlation_header": "X-Correlation-ID",
+    "trace_headers": [
+      "traceparent",
+      "tracestate"
+    ]
+  },
+  "v3_kernel_routes": {
+    "submit": {
+      "method": "POST",
+      "path": "/platform/v1/commands",
+      "response": "202 + Location: /platform/v1/operations/{operation_id}"
+    },
+    "status": {
+      "method": "GET",
+      "path": "/platform/v1/operations/{operation_id}"
+    },
+    "timeline": {
+      "method": "GET",
+      "path": "/platform/v1/operations/{operation_id}/timeline"
+    },
+    "cancel": {
+      "method": "POST",
+      "path": "/platform/v1/operations/{operation_id}/cancel"
+    },
+    "replay": {
+      "method": "POST",
+      "path": "/platform/v1/operations/{operation_id}/replay"
+    },
+    "describe": {
+      "method": "GET",
+      "path": "/platform/v1/kernel/describe"
+    }
+  },
+  "odoo_to_middleware": [
+    {
+      "current_path": "/api/v1/campaign-designs/preview",
+      "current_kind": "COMMAND",
+      "current_auth": "static-bearer-file",
+      "effectful": false,
+      "v3_state": "READ_STAYS_ON_CURRENT_ROUTE",
+      "v3_command_type": null,
+      "owner_decision": "static bearer credential for this call is a pinned strict-xfail owner decision (Keycloak client-credentials expected)",
+      "source": [
+        "custom-addons/call_center_campaign/models/outbox.py"
+      ]
+    },
+    {
+      "current_path": "/api/v1/odoo/events",
+      "current_kind": "EVENT",
+      "current_auth": "static-bearer-file+hmac",
+      "effectful": false,
+      "v3_state": "EVENT_INGRESS_STAYS_ON_CURRENT_ROUTE",
+      "v3_command_type": null,
+      "owner_decision": "event ingress is not a command; it remains the shared_edge ingress_odoo_event operation (Kong route middleware-ingress-odoo-event)",
+      "source": [
+        "custom-addons/codestra_agent_onboarding/models/outbox_delivery.py"
+      ]
+    },
+    {
+      "current_path": "/api/v1/recordings/{recording_id}/playback-url",
+      "current_kind": "COMMAND",
+      "current_auth": "shared-api-key",
+      "effectful": false,
+      "v3_state": "READ_STAYS_ON_CURRENT_ROUTE",
+      "v3_command_type": null,
+      "owner_decision": "monolith-only recording read; shared API key is a pinned owner decision",
+      "source": [
+        "custom-addons/codestra_vicidial_crm/controllers/call_control.py",
+        "custom-addons/codestra_vicidial_recording/controllers/recording_api.py"
+      ]
+    },
+    {
+      "current_path": "/api/v1/control/callbacks",
+      "current_kind": "CALLBACK",
+      "current_auth": "keycloak-client-credentials",
+      "effectful": true,
+      "v3_state": "MAPS_TO_V3_COMMAND",
+      "v3_command_type": "callback.schedule",
+      "v3_adapter": "odoo",
+      "source": [
+        "custom-addons/codestra_appointments/models/callback_sync.py"
+      ],
+      "source_literal": "/control/callbacks",
+      "base_url_env": "CODESTRA_CALLBACK_API_BASE_URL"
+    },
+    {
+      "current_path": "/api/v1/control/callbacks/{kind}/{callback_id}",
+      "source_literal": "/control/callbacks/",
+      "base_url_env": "CODESTRA_CALLBACK_API_BASE_URL",
+      "current_kind": "CALLBACK",
+      "current_auth": "keycloak-client-credentials",
+      "effectful": true,
+      "v3_state": "MAPS_TO_V3_COMMAND",
+      "v3_command_type": "callback.update",
+      "v3_adapter": "odoo",
+      "source": [
+        "custom-addons/codestra_appointments/models/callback_sync.py"
+      ]
+    },
+    {
+      "current_path": "/platform/v1/agent-provisioning/requests",
+      "current_kind": "COMMAND",
+      "current_auth": "keycloak-client-credentials",
+      "effectful": true,
+      "v3_state": "MAPS_TO_V3_COMMAND",
+      "v3_command_type": "agent.provision",
+      "v3_adapter": "provisioning",
+      "source": [
+        "custom-addons/codestra_agent_onboarding/models/middleware_client.py",
+        "custom-addons/codestra_middleware_bridge/models/agent_provisioning_transport.py"
+      ]
+    },
+    {
+      "current_path": "/v1/calls/originate",
+      "current_kind": "COMMAND",
+      "current_auth": "keycloak-client-credentials",
+      "effectful": true,
+      "v3_state": "MAPS_TO_V3_COMMAND",
+      "v3_command_type": "call.originate",
+      "v3_adapter": "vicidial-pjsip",
+      "source": [
+        "custom-addons/codestra_vicidial_crm/models/middleware_client.py"
+      ]
+    },
+    {
+      "current_path": "/v1/telephony/calls/originate",
+      "current_kind": "COMMAND",
+      "current_auth": "keycloak-client-credentials",
+      "effectful": true,
+      "v3_state": "MAPS_TO_V3_COMMAND",
+      "v3_command_type": "call.originate",
+      "v3_adapter": "vicidial-pjsip",
+      "source": [
+        "custom-addons/codestra_vicidial_crm/models/middleware_client.py"
+      ]
+    },
+    {
+      "current_path": "/v1/telephony/commands",
+      "current_kind": "COMMAND",
+      "current_auth": "keycloak-client-credentials",
+      "effectful": true,
+      "v3_state": "MAPS_TO_V3_COMMAND",
+      "v3_command_type": "call.control",
+      "v3_adapter": "vicidial-pjsip",
+      "source": [
+        "custom-addons/codestra_vicidial_crm/models/middleware_client.py"
+      ]
+    },
+    {
+      "current_path": "/v1/communications/messages",
+      "current_kind": "COMMAND",
+      "current_auth": "keycloak-client-credentials",
+      "effectful": true,
+      "v3_state": "MAPS_TO_V3_COMMAND",
+      "v3_command_type": "message.send",
+      "v3_adapter": "klyrow (email) / telnexa (sms) selected by Middleware capability registry, never by Odoo",
+      "source": [
+        "custom-addons/codestra_email_middleware/transport.py",
+        "custom-addons/codestra_sms_middleware/transport.py"
+      ]
+    },
+    {
+      "current_path": "/v1/identities/{identity_id}",
+      "current_kind": "COMMAND",
+      "current_auth": "unknown",
+      "effectful": true,
+      "v3_state": "OTHER_SERVICE_NOT_MIDDLEWARE",
+      "v3_command_type": null,
+      "owner_decision": "provisioning-service target (CODESTRA_PROVISIONING_URL); out of the Middleware command kernel until the provisioning service is folded into an adapter",
+      "source": [
+        "custom-addons/codestra_identity_provisioning/models/provisioning.py"
+      ]
+    }
+  ],
+  "middleware_to_odoo": {
+    "role": "V3 Odoo adapter executes governed business writes against the Odoo integration API and reads back before completing",
+    "capability": "ODOO_WRITE",
+    "readback_required": true,
+    "inbound_controller_families": [
+      "/api/v1/integration/agents/{id}",
+      "/api/v1/integration/audit/{id}",
+      "/api/v1/integration/campaign-actions",
+      "/api/v1/integration/campaigns/{id}",
+      "/api/v1/integration/capabilities",
+      "/api/v1/integration/desired-state/{kind}/{id}",
+      "/api/v1/integration/leads/{id}",
+      "/api/v1/integration/observability/incidents",
+      "/api/v1/integration/observability/kpis",
+      "/api/v1/integration/observability/sync-status",
+      "/api/v1/integration/outbox/claims",
+      "/api/v1/integration/outbox/{id}",
+      "/api/v1/integration/provider-activities",
+      "/api/v1/integration/reconciliation/drifts/{id}",
+      "/api/v1/integration/reconciliation/runs/{id}",
+      "/api/v1/integration/results",
+      "/api/v1/integration/results/{id}",
+      "/api/v1/integration/results/{id}/reconcile",
+      "/api/v1/integration/telephony/mappings",
+      "/api/v1/integration/telephony/projections",
+      "/api/v1/integration/traces",
+      "/api/v1/integration/traces/{id}",
+      "/codestra/middleware/v1/crm/leads",
+      "/codestra/middleware/v1/crm/leads/{external_id}",
+      "/codestra/middleware/v1/crm/activities"
+    ],
+    "private_only_middleware_callbacks": [
+      "POST /api/v1/integration/automation-results",
+      "POST /api/v1/integration/campaigns/actual-state"
+    ],
+    "n8n_direct_business_effect_bypass": false
+  },
+  "activation": {
+    "prerequisites": [
+      "MIDDLEWARE_V3_FINAL_SHA frozen with the six /platform/v1 kernel operations in deploy/public-api-route-contract.json",
+      "Kong re-vendored at that digest with the six routes activated",
+      "Keycloak platform.command / platform.command.read optional scopes attached to odoo-integration",
+      "Odoo transports switched from the current_path calls to POST /platform/v1/commands with the v3_command_type, Idempotency-Key and X-Correlation-ID; status read from GET /platform/v1/operations/{operation_id}"
+    ],
+    "blocked_on": "BLOCKED_ON_MIDDLEWARE_V3_FINAL_SHA"
+  }
+}
