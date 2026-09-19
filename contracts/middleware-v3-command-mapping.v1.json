@@ -17,12 +17,12 @@
   "flow": {
     "effectful_request": "odoo -> caddy -> kong -> middleware-integration-api:8095 -> odoo adapter / provider adapter",
     "canonical_upstream": "middleware-integration-api:8095",
-    "forbidden_upstreams": [
-      "appolon-middleware-integration-api:8080",
-      "middleware:8080"
-    ],
     "browser_privileged_direct_bridge": false,
-    "odoo_direct_provider_effects": "forbidden except the reviewed codestra_klyrow_smtp SMTP relay (owner decision, governed by scripts/validate_klyrow_smtp_policy.py)"
+    "odoo_direct_provider_effects": "forbidden except the reviewed codestra_klyrow_smtp SMTP relay (owner decision, governed by scripts/validate_klyrow_smtp_policy.py)",
+    "retired_upstream_aliases": [
+      "appolon-middleware-integration-api"
+    ],
+    "retired_upstream_rule": "the retired Middleware host alias is denied on every port; only middleware-integration-api:8095 is canonical"
   },
   "identity": {
     "caller_client_id": "odoo-integration",

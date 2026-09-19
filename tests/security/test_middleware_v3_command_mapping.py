@@ -35,7 +35,7 @@ class MiddlewareV3CommandMappingTests(unittest.TestCase):
         self.assertEqual(contract["status"], "V3_PENDING_FINAL_MIDDLEWARE_CONTRACT")
         self.assertFalse(contract["runtime_apply_authorized"])
         self.assertEqual(contract["flow"]["canonical_upstream"], "middleware-integration-api:8095")
-        self.assertIn("appolon-middleware-integration-api:8080", contract["flow"]["forbidden_upstreams"])
+        self.assertIn("appolon-middleware-integration-api", contract["flow"]["retired_upstream_aliases"])
         self.assertFalse(contract["flow"]["browser_privileged_direct_bridge"])
         self.assertEqual(contract["identity"]["caller_client_id"], "odoo-integration")
         self.assertEqual(contract["identity"]["audience"], "middleware-api")

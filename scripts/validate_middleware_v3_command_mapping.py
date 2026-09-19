@@ -11,7 +11,7 @@ V3 route contract is frozen. This validator proves three things from source:
   the mapping, and no non-test addon references a Middleware path the mapping
   does not know (the mapping cannot go stale silently);
 * no addon calls the V3 kernel routes yet, and no addon targets the retired
-  Middleware 8080 alias.
+  Middleware host alias.
 """
 from __future__ import annotations
 
@@ -28,7 +28,7 @@ KERNEL_PATHS = (
     "/platform/v1/operations/",
     "/platform/v1/kernel/describe",
 )
-RETIRED_UPSTREAMS = ("appolon-middleware-integration-api:8080", "middleware:8080")
+RETIRED_UPSTREAM_ALIASES = ("appolon-middleware-integration-api",)
 # Middleware paths a governed addon may call. Anything else under these prefixes
 # that is not in the mapping is drift.
 MIDDLEWARE_PREFIXES = ("/api/v1/", "/platform/v1/", "/v1/", "/v2/")
@@ -105,9 +105,9 @@ def main() -> int:
                 if hit.startswith(kernel):
                     fail(f"{source.relative_to(ROOT).as_posix()} already calls the V3 kernel route {hit}")
             seen.setdefault(template(hit), set()).add(source.relative_to(ROOT).as_posix())
-        for retired in RETIRED_UPSTREAMS:
+        for retired in RETIRED_UPSTREAM_ALIASES:
             if retired in text:
-                fail(f"{source.relative_to(ROOT).as_posix()} targets the retired upstream {retired}")
+                fail(f"{source.relative_to(ROOT).as_posix()} targets the retired upstream alias {retired}")
 
     unknown = sorted(k for k in seen if k not in mapped and k.startswith(MIDDLEWARE_PREFIXES) and not k.startswith("/v1/identities"))
     # Paths that are route fragments composed at runtime (no method call) show up as
@@ -117,7 +117,7 @@ def main() -> int:
         fail("addons reference Middleware paths the mapping does not know: " + ", ".join(unknown))
 
     print("MIDDLEWARE_V3_COMMAND_MAPPING=PASS")
-    print(f"MAPPED_PATHS={len(mapped)} MAPS_TO_V3={sum(1 for r in mapped.values() if r['v3_state'] == 'MAPS_TO_V3_COMMAND')} V3_KERNEL_CALLS_IN_ADDONS=0 RETIRED_8080_REFERENCES=0")
+    print(f"MAPPED_PATHS={len(mapped)} MAPS_TO_V3={sum(1 for r in mapped.values() if r['v3_state'] == 'MAPS_TO_V3_COMMAND')} V3_KERNEL_CALLS_IN_ADDONS=0 RETIRED_ALIAS_REFERENCES=0")
     print("RUNTIME_APPLY_AUTHORIZED=NO")
     return 0
 
