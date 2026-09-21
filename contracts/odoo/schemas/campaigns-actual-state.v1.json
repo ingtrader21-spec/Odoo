@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "internal://odoo/campaigns/actual-state/v1",
+  "title": "Campaign actual-state readback (Middleware -> Odoo)",
+  "description": "Idempotency-Key header equals body idempotency_key. 409 with error_class STALE_CONFIGURATION_VERSION for a stale or future configuration_version; the same key and body replays the original receipt without a second state change; a changed body under the same key is 409 IDEMPOTENCY_CONFLICT. A matching version and target state advances the lifecycle; a lagging state never creates drift.",
+  "$defs": {
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_uuid",
+        "command_id",
+        "idempotency_key",
+        "attempt",
+        "organization_public_id",
+        "business_unit_public_id",
+        "campaign_public_id",
+        "configuration_version",
+        "operation",
+        "effective_state",
+        "manifest_ref",
+        "manifest_hash",
+        "evidence",
+        "observed_at",
+        "correlation_id",
+        "causation_id"
+      ],
+      "properties": {
+        "event_uuid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "command_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "organization_public_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "business_unit_public_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "campaign_public_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "configuration_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "provision",
+            "synthetic_test",
+            "activate",
+            "disable",
+            "reconcile"
+          ]
+        },
+        "effective_state": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "absent",
+            "provisioned_disabled",
+            "synthetic_tested",
+            "active",
+            "disabled"
+          ]
+        },
+        "manifest_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "manifest_hash": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "evidence": {
+          "type": "object"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "correlation_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "causation_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    },
+    "response": {
+      "type": "object",
+      "required": [
+        "status",
+        "event_uuid",
+        "command_id",
+        "configuration_version",
+        "effective_state",
+        "correlation_id",
+        "readback_id"
+      ],
+      "properties": {
+        "status": {
+          "const": "APPLIED"
+        },
+        "event_uuid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "command_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "configuration_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "effective_state": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "absent",
+            "provisioned_disabled",
+            "synthetic_tested",
+            "active",
+            "disabled"
+          ]
+        },
+        "correlation_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "readback_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    }
+  },
+  "errors": {
+    "409": [
+      "STALE_CONFIGURATION_VERSION",
+      "IDEMPOTENCY_CONFLICT"
+    ],
+    "422": "validation",
+    "403": "authorization",
+    "500": "sanitized"
+  }
+}

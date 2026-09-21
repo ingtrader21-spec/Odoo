@@ -512,7 +512,7 @@ class TelephonyMiddlewareClient(models.AbstractModel):
 
     @api.private
     @api.model
-    def _command_access_token(self, required_scope="telephony:command"):
+    def _command_access_token(self, required_scope="telephony.commands.write"):
         """Acquire a scoped service token before dispatch; never use the legacy key.
 
         Only deployment-controlled environment and secret files configure OIDC.
@@ -552,7 +552,7 @@ class TelephonyMiddlewareClient(models.AbstractModel):
                     "grant_type": "client_credentials",
                     "client_id": client_id,
                     "client_secret": secret,
-                    "scope": "telephony:command",
+                    "scope": "telephony.commands.write",
                 }).encode("ascii"),
                 {"Content-Type": "application/x-www-form-urlencoded"},
                 method="POST",

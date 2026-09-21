@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <menuitem id="menu_cc_control_plane" name="Control Plane" parent="call_center_core.menu_call_center_configuration" sequence="5" groups="codestra_cc_security.group_cc_global_administrator"/>
+  <menuitem id="menu_cc_applications" name="Applications" parent="menu_cc_control_plane" action="action_cc_applications" sequence="10" groups="codestra_cc_security.group_cc_global_administrator"/>
+  <menuitem id="menu_cc_templates" name="Campaign Templates" parent="menu_cc_control_plane" action="action_cc_templates" sequence="20" groups="codestra_cc_security.group_cc_global_administrator"/>
+  <menuitem id="menu_cc_configuration_versions" name="Configuration Versions" parent="menu_cc_control_plane" action="action_cc_configuration_versions" sequence="30" groups="codestra_cc_security.group_cc_global_administrator"/>
+  <menuitem id="menu_cc_provisioning_runs" name="Provisioning Runs" parent="menu_cc_control_plane" action="action_cc_provisioning_runs" sequence="40" groups="codestra_cc_security.group_cc_global_administrator"/>
+  <menuitem id="menu_cc_campaign_readbacks" name="Read-back Receipts" parent="menu_cc_control_plane" action="action_cc_campaign_readbacks" sequence="50" groups="codestra_cc_security.group_cc_global_administrator"/>
+</odoo>

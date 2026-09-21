@@ -13,12 +13,19 @@ Odoo 19 is the business system of record for:
 - post-call forms and notes;
 - callbacks and appointments;
 - consent and communication preferences;
-- SMS and email history;
-- delivery results;
+- operational SMS and email history and campaign communication timeline;
+- normalized delivery-result projections received from the authoritative
+  communication providers;
 - agent and supervisor business views;
 - business reporting.
 
 This repository contains the reviewed custom modules, tests, migrations, and deployment controls that implement those business capabilities. It does not contain the PostgreSQL database, filestore, credentials, certificates, runtime sessions, logs, backups, or edits copied from a running container.
+
+Provider delivery truth remains outside Odoo: Klyrow owns email delivery
+state, Telnexa owns SMS delivery state, and VICIdial owns active dialer/call
+state. Odoo stores read-safe projections, campaign associations, audit
+references, and operational timeline entries; it does not become a provider
+ledger or a second delivery system.
 
 ## Authorized cross-system writer
 

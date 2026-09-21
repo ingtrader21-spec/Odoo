@@ -7,6 +7,8 @@ reviewed releases, and deployment source references belong here.
 `Codestra-SRL/codestra-odoo-addons` is the legacy source for the controlled
 migration. After its complete source has been imported and accepted, retain
 that repository as a historical backup. Develop and release from Appolon.
+The repository-specific integration-plane ownership and implementation plan is
+in [`docs/CODESTRA-INTEGRATION-PLANE-DESIGN.md`](docs/CODESTRA-INTEGRATION-PLANE-DESIGN.md).
 
 The import places runnable modules in `custom-addons/` and preserves the
 complete source snapshot in `upstream/codestra-odoo-addons/`. Keep existing

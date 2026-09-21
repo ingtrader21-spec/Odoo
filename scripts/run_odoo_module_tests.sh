@@ -237,6 +237,7 @@ if ! docker run --rm \
   -e PASSWORD="$DB_PASSWORD" \
   -v "$CI_PYTHON_DIR:/opt/codestra-ci-python:ro" \
   -v "$ROOT_DIR/custom-addons:/mnt/extra-addons:ro" \
+  -v "$ROOT_DIR/contracts:/mnt/contracts:ro" \
   -v "$ODOO_DATA_VOLUME:/var/lib/odoo" \
   "$ODOO_TEST_IMAGE" \
   -- \

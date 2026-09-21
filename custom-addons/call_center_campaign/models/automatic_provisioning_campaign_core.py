@@ -141,7 +141,11 @@ class CallCenterCampaignAutomaticProvisioning(models.Model):
             automatic_default = allow_default and (
                 values.get("design_automation_enabled", True) is not False
             )
-            if "automatic_design_managed" in values:
+            # Ownership is system controlled: a caller may never claim it.
+            # An explicit False equals the field default and is what the
+            # cc.campaign _inherits delegation injects when it creates the
+            # legacy parent, so only a truthy claim is rejected.
+            if values.get("automatic_design_managed"):
                 raise AccessError(
                     "Automatic campaign-design ownership is system controlled."
                 )

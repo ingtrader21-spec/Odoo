@@ -95,6 +95,10 @@ python3 -I scripts/validate_klyrow_smtp_policy.py
 printf '==> Validating canonical API inventory\n'
 python3 -I scripts/validate_api_contracts.py
 
+printf '==> Validating the shared Middleware->Odoo campaign-control contract\n'
+python3 -I scripts/validate_odoo_shared_contract.py
+python3 -I scripts/generate_odoo_endpoint_catalog.py --check
+
 printf '==> Validating migration policies\n'
 python3 -I scripts/validate_migration_contracts.py
 

@@ -1,0 +1,415 @@
+{
+  "schema_version": 1,
+  "service_key": "odoo",
+  "api_version": "v1",
+  "description": "Single source for every Middleware-to-Odoo operation. app/adapters/odoo/client.py ODOO_ENDPOINTS must equal `operations`; migration 0066 embeds a static snapshot of the rows it seeds and pins this file's canonical SHA-256.",
+  "hash_rule": "sha256 over json.dumps(document, sort_keys=True, separators=(',', ':')).encode('utf-8')",
+  "direction": "middleware_to_odoo",
+  "operations": {
+    "outbox.claim": {
+      "endpoint_key": "odoo.outbox.claim",
+      "domain": "outbox",
+      "kind": "write",
+      "method": "POST",
+      "path": "/api/v1/integration/outbox/claims",
+      "scope": "odoo.integration.outbox.claim",
+      "registered_by": null,
+      "transport": "runtime-client"
+    },
+    "outbox.read": {
+      "endpoint_key": "odoo.outbox.read",
+      "domain": "outbox",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/integration/outbox/{event_id}",
+      "scope": "odoo.integration.outbox.read",
+      "registered_by": null,
+      "transport": "runtime-client"
+    },
+    "outbox.renew": {
+      "endpoint_key": "odoo.outbox.renew",
+      "domain": "outbox",
+      "kind": "write",
+      "method": "POST",
+      "path": "/api/v1/integration/outbox/{event_id}/renewals",
+      "scope": "odoo.integration.outbox.renew",
+      "registered_by": null,
+      "transport": "runtime-client"
+    },
+    "outbox.acknowledge": {
+      "endpoint_key": "odoo.outbox.acknowledge",
+      "domain": "outbox",
+      "kind": "write",
+      "method": "POST",
+      "path": "/api/v1/integration/outbox/{event_id}/acknowledgements",
+      "scope": "odoo.integration.outbox.acknowledge",
+      "registered_by": null,
+      "transport": "runtime-client"
+    },
+    "outbox.fail": {
+      "endpoint_key": "odoo.outbox.fail",
+      "domain": "outbox",
+      "kind": "write",
+      "method": "POST",
+      "path": "/api/v1/integration/outbox/{event_id}/failures",
+      "scope": "odoo.integration.outbox.fail",
+      "registered_by": null,
+      "transport": "runtime-client"
+    },
+    "outbox.release": {
+      "endpoint_key": "odoo.outbox.release",
+      "domain": "outbox",
+      "kind": "write",
+      "method": "POST",
+      "path": "/api/v1/integration/outbox/{event_id}/releases",
+      "scope": "odoo.integration.outbox.release",
+      "registered_by": null,
+      "transport": "runtime-client"
+    },
+    "results.create": {
+      "endpoint_key": "odoo.results.create",
+      "domain": "results",
+      "kind": "write",
+      "method": "POST",
+      "path": "/api/v1/integration/results",
+      "scope": "odoo.integration.results.write",
+      "registered_by": "0050",
+      "response_binding": [
+        "persisted",
+        "result_public_id",
+        "correlation_id"
+      ],
+      "receipt_field": "result_inbox_id"
+    },
+    "results.read": {
+      "endpoint_key": "odoo.results.read",
+      "domain": "results",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/integration/results/{result_public_id}",
+      "scope": "odoo.integration.results.read",
+      "registered_by": null
+    },
+    "results.by_delivery": {
+      "endpoint_key": "odoo.results.by_delivery",
+      "domain": "results",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/integration/results/by-delivery/{delivery_public_id}",
+      "scope": "odoo.integration.results.read",
+      "registered_by": null
+    },
+    "automation_results.apply": {
+      "endpoint_key": "odoo.automation_results.apply",
+      "domain": "automation",
+      "kind": "write",
+      "method": "POST",
+      "path": "/api/v1/integration/automation-results",
+      "scope": "odoo.integration.automation_results.write",
+      "registered_by": "0066",
+      "request_schema": "internal://odoo/automation-results/v1",
+      "response_binding": [
+        "status",
+        "event_id",
+        "execution_id",
+        "correlation_id"
+      ],
+      "receipt_field": "receipt_id",
+      "replaces": "campaign_actions.apply"
+    },
+    "provider_activities.create": {
+      "endpoint_key": "odoo.provider_activities.create",
+      "domain": "provider-activities",
+      "kind": "write",
+      "method": "POST",
+      "path": "/api/v1/integration/provider-activities",
+      "scope": "odoo.integration.provider_activities.write",
+      "registered_by": "0066",
+      "request_schema": "internal://odoo/provider-activities/v1",
+      "response_binding": [
+        "status",
+        "event_id",
+        "operation",
+        "correlation_id"
+      ],
+      "receipt_field": "message_id"
+    },
+    "campaign.actual_state.write": {
+      "endpoint_key": "odoo.campaign.actual_state.write",
+      "domain": "campaign-control",
+      "kind": "write",
+      "method": "POST",
+      "path": "/api/v1/integration/campaigns/actual-state",
+      "scope": "odoo.campaign.actual_state.write",
+      "registered_by": "0066",
+      "request_schema": "internal://odoo/campaigns/actual-state/v1",
+      "response_binding": [
+        "status",
+        "event_uuid",
+        "command_id",
+        "configuration_version",
+        "effective_state",
+        "correlation_id"
+      ],
+      "receipt_field": "readback_id",
+      "conflict_status": 409,
+      "conflict_error_class": "STALE_CONFIGURATION_VERSION"
+    },
+    "campaigns.read": {
+      "endpoint_key": "odoo.campaigns.read",
+      "domain": "campaign-control",
+      "kind": "read",
+      "method": "POST",
+      "path": "/api/v1/integration/campaigns/read",
+      "scope": "odoo.campaign.control.read",
+      "registered_by": "0066",
+      "request_schema": "internal://odoo/campaigns/read/v1"
+    },
+    "desired_state.read": {
+      "endpoint_key": "odoo.desired_state.read",
+      "domain": "campaign-control",
+      "kind": "read",
+      "method": "POST",
+      "path": "/api/v1/integration/desired-state/read",
+      "scope": "odoo.campaign.control.read",
+      "registered_by": "0066",
+      "request_schema": "internal://odoo/desired-state/read/v1",
+      "response_fields": [
+        "campaign_public_id",
+        "configuration_version",
+        "desired_state",
+        "manifest_ref",
+        "manifest_hash"
+      ]
+    },
+    "agents.read": {
+      "endpoint_key": "odoo.agents.read",
+      "domain": "reads",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/integration/agents",
+      "scope": "odoo.integration.read",
+      "registered_by": null
+    },
+    "leads.read": {
+      "endpoint_key": "odoo.leads.read",
+      "domain": "reads",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/integration/leads",
+      "scope": "odoo.integration.read",
+      "registered_by": null
+    },
+    "traces.read": {
+      "endpoint_key": "odoo.traces.read",
+      "domain": "reads",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/integration/traces/{trace_id}",
+      "scope": "odoo.integration.read",
+      "registered_by": null
+    },
+    "telephony.projections.read": {
+      "endpoint_key": "odoo.telephony.projections.read",
+      "domain": "telephony",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/integration/telephony/projections",
+      "scope": "odoo.integration.read",
+      "registered_by": null
+    },
+    "telephony.mappings.read": {
+      "endpoint_key": "odoo.telephony.mappings.read",
+      "domain": "telephony",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/integration/telephony/mappings",
+      "scope": "odoo.integration.read",
+      "registered_by": null
+    },
+    "reconciliation.runs.read": {
+      "endpoint_key": "odoo.reconciliation.runs.read",
+      "domain": "reconciliation",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/integration/reconciliation/runs",
+      "scope": "odoo.integration.read",
+      "registered_by": null
+    },
+    "reconciliation.drifts.read": {
+      "endpoint_key": "odoo.reconciliation.drifts.read",
+      "domain": "reconciliation",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/integration/reconciliation/drifts",
+      "scope": "odoo.integration.read",
+      "registered_by": null
+    },
+    "sales.lookup": {
+      "endpoint_key": "odoo.sales.lookup",
+      "domain": "sales",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/integration/sales/lookup",
+      "scope": "odoo.integration.read",
+      "registered_by": null
+    },
+    "sales.verification.read": {
+      "endpoint_key": "odoo.sales.verification.read",
+      "domain": "sales",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/integration/sales/verification",
+      "scope": "odoo.integration.read",
+      "registered_by": null
+    },
+    "observability.kpis.create": {
+      "endpoint_key": "odoo.observability.kpis.create",
+      "domain": "observability",
+      "kind": "write",
+      "method": "POST",
+      "path": "/api/v1/integration/observability/kpis",
+      "scope": "odoo.observability.kpis.write",
+      "registered_by": "0061",
+      "response_binding": [
+        "status",
+        "event_id",
+        "operation",
+        "correlation_id"
+      ],
+      "receipt_field": "receipt_id"
+    },
+    "observability.incidents.upsert": {
+      "endpoint_key": "odoo.observability.incidents.upsert",
+      "domain": "observability",
+      "kind": "write",
+      "method": "POST",
+      "path": "/api/v1/integration/observability/incidents",
+      "scope": "odoo.observability.incidents.write",
+      "registered_by": "0061",
+      "response_binding": [
+        "status",
+        "event_id",
+        "operation",
+        "correlation_id"
+      ],
+      "receipt_field": "receipt_id"
+    },
+    "observability.kpis.read": {
+      "endpoint_key": "odoo.observability.kpis.read",
+      "domain": "observability",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/integration/observability/kpis",
+      "scope": "odoo.observability.read",
+      "registered_by": "0061"
+    },
+    "observability.incidents.read": {
+      "endpoint_key": "odoo.observability.incidents.read",
+      "domain": "observability",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/integration/observability/incidents",
+      "scope": "odoo.observability.read",
+      "registered_by": "0061"
+    },
+    "observability.sync.read": {
+      "endpoint_key": "odoo.observability.sync.read",
+      "domain": "observability",
+      "kind": "read",
+      "method": "GET",
+      "path": "/api/v1/integration/observability/sync-status",
+      "scope": "odoo.observability.read",
+      "registered_by": "0061"
+    }
+  },
+  "retired_operations": {
+    "campaign_actions.apply": {
+      "endpoint_key": "odoo.campaign_actions.apply",
+      "path": "/api/v1/integration/campaign-actions",
+      "registered_by": "0054",
+      "retired_by": "0066",
+      "reason": "Path collided with Odoo's campaign lifecycle command route; n8n automation results now use automation_results.apply. 0066 sets kill_switch=true on the 0054 endpoint version and never reactivates it."
+    }
+  },
+  "registry_policy_0066": {
+    "staging": {
+      "reads": "unscoped binding, active",
+      "writes": "binding scoped to TEST_SYN only, active",
+      "write_binding": {
+        "organization_public_id": "TEST_SYN_TENANT",
+        "business_unit_public_id": "TEST_SYN",
+        "campaign_public_id": "TEST_SYN"
+      },
+      "saga_enrollment": "events outside write_binding dead-letter at enrollment with SCOPE_NOT_ALLOWED; no Odoo or provider call is made"
+    },
+    "production": {
+      "reads": "unscoped binding, active",
+      "writes": "unscoped binding, kill_switch=true until a separate reviewed activation migration",
+      "write_binding": null
+    }
+  },
+  "outbox_events": {
+    "description": "Odoo transactional-outbox event types Middleware's campaign saga consumes. Anything else from the Odoo outbox is durably stored but never dispatched to a provider.",
+    "allowlist": [
+      "campaign.provision.requested.v1",
+      "campaign.synthetic_test.requested.v1",
+      "campaign.activate.requested.v1",
+      "campaign.disable.requested.v1",
+      "campaign.reconcile.requested.v1"
+    ],
+    "operation_by_event_type": {
+      "campaign.provision.requested.v1": "provision",
+      "campaign.synthetic_test.requested.v1": "synthetic_test",
+      "campaign.activate.requested.v1": "activate",
+      "campaign.disable.requested.v1": "disable",
+      "campaign.reconcile.requested.v1": "reconcile"
+    },
+    "payload_required_fields": [
+      "command_id",
+      "organization_public_id",
+      "business_unit_public_id",
+      "campaign_public_id",
+      "configuration_version",
+      "manifest_ref",
+      "manifest_hash"
+    ]
+  },
+  "effective_states": [
+    "unknown",
+    "absent",
+    "provisioned_disabled",
+    "synthetic_tested",
+    "active",
+    "disabled"
+  ],
+  "synthetic_adapter_result_state": {
+    "provision": "provisioned_disabled",
+    "synthetic_test": "synthetic_tested",
+    "activate": "active",
+    "disable": "disabled",
+    "reconcile": null
+  },
+  "actual_state_readback": {
+    "required_fields": [
+      "event_uuid",
+      "command_id",
+      "idempotency_key",
+      "attempt",
+      "organization_public_id",
+      "business_unit_public_id",
+      "campaign_public_id",
+      "configuration_version",
+      "operation",
+      "effective_state",
+      "manifest_ref",
+      "manifest_hash",
+      "evidence",
+      "observed_at",
+      "correlation_id",
+      "causation_id"
+    ],
+    "idempotency": "Idempotency-Key header equals body idempotency_key. A transport retry reuses the same key and attempt; a newly observed adapter result gets a new key.",
+    "stale_version": "Odoo answers 409 when configuration_version is older than its current version; Middleware dead-letters with STALE_CONFIGURATION_VERSION and never retries."
+  }
+}

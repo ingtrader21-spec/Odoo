@@ -1,0 +1,3291 @@
+{
+  "schema": "codestra.middleware.public-api-route-contract.v2",
+  "service": "middleware-integration-api",
+  "listener_port": 8095,
+  "environment": "TEST_SYN",
+  "live_apply_authorized": false,
+  "provider_effects_enabled": false,
+  "hash_rule": "sha256 over json.dumps(contract, sort_keys=True, separators=(',', ':')).encode('utf-8')",
+  "edge": {
+    "path": "caddy -> kong -> middleware-integration-api:8095",
+    "rule": "Caddy routes shared_edge operations to Kong. Kong enforces issuer, audience, azp, scope, rate and size before Middleware re-authorizes the request."
+  },
+  "routes": [
+    {
+      "operation_id": "deny_retired_campaign_actions",
+      "method": "POST",
+      "path": "/api/v1/integration/campaign-actions",
+      "classification": "denied",
+      "calling_client": "none",
+      "audience": "middleware-api",
+      "scope": "none",
+      "auth": "deny",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "denied"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        404,
+        405
+      ],
+      "owner": "middleware",
+      "upstream": "none"
+    },
+    {
+      "operation_id": "deny_retired_integration_campaign_actions",
+      "method": "POST",
+      "path": "/api/v1/integrations/odoo/campaign-actions",
+      "classification": "denied",
+      "calling_client": "none",
+      "audience": "middleware-api",
+      "scope": "none",
+      "auth": "deny",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "denied"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        404,
+        405
+      ],
+      "owner": "middleware",
+      "upstream": "none"
+    },
+    {
+      "operation_id": "deny_retired_odoo_campaign_commands",
+      "method": "POST",
+      "path": "/api/v1/integrations/odoo/campaign-commands",
+      "classification": "denied",
+      "calling_client": "none",
+      "audience": "middleware-api",
+      "scope": "none",
+      "auth": "deny",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "denied"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        404,
+        405
+      ],
+      "owner": "middleware",
+      "upstream": "none"
+    },
+    {
+      "operation_id": "deny_retired_odoo_campaign_command_read",
+      "method": "GET",
+      "path": "/api/v1/integrations/odoo/campaign-commands/{command_id}",
+      "classification": "denied",
+      "calling_client": "none",
+      "audience": "middleware-api",
+      "scope": "none",
+      "auth": "deny",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "denied"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        404,
+        405
+      ],
+      "owner": "middleware",
+      "upstream": "none"
+    },
+    {
+      "operation_id": "deny_retired_odoo_campaign_actions",
+      "method": "POST",
+      "path": "/api/v1/odoo/campaign-actions",
+      "classification": "denied",
+      "calling_client": "none",
+      "audience": "middleware-api",
+      "scope": "none",
+      "auth": "deny",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "denied"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        404,
+        405
+      ],
+      "owner": "middleware",
+      "upstream": "none"
+    },
+    {
+      "operation_id": "deny_deprecated_n8n_commands",
+      "method": "POST",
+      "path": "/v1/integrations/n8n/commands",
+      "classification": "denied",
+      "calling_client": "none",
+      "audience": "middleware-api",
+      "scope": "none",
+      "auth": "deny",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "denied"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        404,
+        405
+      ],
+      "owner": "middleware",
+      "upstream": "none"
+    },
+    {
+      "operation_id": "deny_deprecated_n8n_operations",
+      "method": "GET",
+      "path": "/v1/integrations/n8n/operations",
+      "classification": "denied",
+      "calling_client": "none",
+      "audience": "middleware-api",
+      "scope": "none",
+      "auth": "deny",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "denied"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        404,
+        405
+      ],
+      "owner": "middleware",
+      "upstream": "none"
+    },
+    {
+      "operation_id": "deny_deprecated_n8n_operation",
+      "method": "GET",
+      "path": "/v1/integrations/n8n/operations/{command_id}",
+      "classification": "denied",
+      "calling_client": "none",
+      "audience": "middleware-api",
+      "scope": "none",
+      "auth": "deny",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "denied"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        404,
+        405
+      ],
+      "owner": "middleware",
+      "upstream": "none"
+    },
+    {
+      "operation_id": "deny_deprecated_n8n_cancel",
+      "method": "POST",
+      "path": "/v1/integrations/n8n/operations/{command_id}/cancel",
+      "classification": "denied",
+      "calling_client": "none",
+      "audience": "middleware-api",
+      "scope": "none",
+      "auth": "deny",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "denied"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        404,
+        405
+      ],
+      "owner": "middleware",
+      "upstream": "none"
+    },
+    {
+      "operation_id": "deny_deprecated_n8n_reconcile",
+      "method": "POST",
+      "path": "/v1/integrations/n8n/operations/{command_id}/reconcile",
+      "classification": "denied",
+      "calling_client": "none",
+      "audience": "middleware-api",
+      "scope": "none",
+      "auth": "deny",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "denied"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        404,
+        405
+      ],
+      "owner": "middleware",
+      "upstream": "none"
+    },
+    {
+      "operation_id": "deliver_automation_result_to_odoo",
+      "method": "POST",
+      "path": "/api/v1/integration/automation-results",
+      "classification": "private_only",
+      "calling_client": "middleware-worker",
+      "audience": "codestra-odoo",
+      "scope": "odoo.integration.automation_results.write",
+      "auth": "middleware-service-jwt",
+      "request_schema": "internal://odoo/automation-results/v1",
+      "response_schema": "internal://odoo/automation-results/v1/response",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        422,
+        429,
+        503
+      ],
+      "owner": "odoo",
+      "upstream": "odoo:8069"
+    },
+    {
+      "operation_id": "report_campaign_actual_state_to_odoo",
+      "method": "POST",
+      "path": "/api/v1/integration/campaigns/actual-state",
+      "classification": "private_only",
+      "calling_client": "middleware-worker",
+      "audience": "codestra-odoo",
+      "scope": "odoo.campaign.actual_state.write",
+      "auth": "middleware-service-jwt",
+      "request_schema": "internal://odoo/campaigns/actual-state/v1",
+      "response_schema": "internal://odoo/campaigns/actual-state/v1/response",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        422,
+        429,
+        503
+      ],
+      "owner": "odoo",
+      "upstream": "odoo:8069"
+    },
+    {
+      "operation_id": "check_automation_policy",
+      "method": "POST",
+      "path": "/api/v1/automation/policy-check",
+      "classification": "shared_edge",
+      "calling_client": "n8n-automation",
+      "audience": "middleware-api",
+      "scope": "n8n.policy.check",
+      "auth": "n8n-service-jwt",
+      "request_schema": "internal://middleware/check_automation_policy/request/v1",
+      "response_schema": "internal://middleware/check_automation_policy/response/v1",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        422,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "list_callbacks",
+      "method": "GET",
+      "path": "/api/v1/callbacks",
+      "classification": "shared_edge",
+      "calling_client": "callback-ui",
+      "audience": "codestra-callback-api",
+      "scope": "callbacks.read",
+      "auth": "callback-jwt",
+      "request_schema": "internal://middleware/list_callbacks/request/v1",
+      "response_schema": "internal://middleware/list_callbacks/response/v1",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        422,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "create_callback",
+      "method": "POST",
+      "path": "/api/v1/control/callbacks",
+      "classification": "shared_edge",
+      "calling_client": "callback-ui",
+      "audience": "codestra-callback-api",
+      "scope": "callbacks.write",
+      "auth": "callback-jwt",
+      "request_schema": "internal://middleware/create_callback/request/v1",
+      "response_schema": "internal://middleware/create_callback/response/v1",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        422,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "submit_n8n_result",
+      "method": "POST",
+      "path": "/api/v1/integrations/n8n/results",
+      "classification": "shared_edge",
+      "calling_client": "n8n-automation",
+      "audience": "middleware-api",
+      "scope": "n8n.results.submit",
+      "auth": "n8n-service-jwt",
+      "request_schema": "internal://middleware/submit_n8n_result/request/v1",
+      "response_schema": "internal://middleware/submit_n8n_result/response/v1",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        422,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "read_n8n_result",
+      "method": "GET",
+      "path": "/api/v1/integrations/n8n/results/{event_id}",
+      "classification": "shared_edge",
+      "calling_client": "n8n-automation",
+      "audience": "middleware-api",
+      "scope": "n8n.results.read",
+      "auth": "n8n-service-jwt",
+      "request_schema": "internal://middleware/read_n8n_result/request/v1",
+      "response_schema": "internal://middleware/read_n8n_result/response/v1",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        422,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "read_odoo_campaign",
+      "method": "GET",
+      "path": "/api/v1/integrations/odoo/campaigns/{campaign_id}",
+      "classification": "shared_edge",
+      "calling_client": "odoo-integration",
+      "audience": "middleware-api",
+      "scope": "odoo.campaigns.read",
+      "auth": "odoo-service-jwt",
+      "request_schema": "internal://middleware/read_odoo_campaign/request/v1",
+      "response_schema": "internal://middleware/read_odoo_campaign/response/v1",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        422,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "read_odoo_campaign_desired_state",
+      "method": "GET",
+      "path": "/api/v1/integrations/odoo/campaigns/{campaign_id}/desired-state",
+      "classification": "shared_edge",
+      "calling_client": "odoo-integration",
+      "audience": "middleware-api",
+      "scope": "odoo.campaigns.read",
+      "auth": "odoo-service-jwt",
+      "request_schema": "internal://middleware/read_odoo_campaign_desired_state/request/v1",
+      "response_schema": "internal://middleware/read_odoo_campaign_desired_state/response/v1",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        422,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "ingress_odoo_integration_events_api_v1_odoo_events_post",
+      "method": "POST",
+      "path": "/api/v1/odoo/events",
+      "classification": "shared_edge",
+      "calling_client": "odoo-integration",
+      "audience": "middleware-api",
+      "scope": "odoo.events.publish",
+      "auth": "odoo-service-jwt",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": true,
+        "carrier": "body.event_id",
+        "replay": "one-event-one-saga"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        422,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "list_activity_platform_v1_activity_get",
+      "method": "GET",
+      "path": "/platform/v1/activity",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:list_activity_platform_v1_activity_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_activity_platform_v1_activity__activity_id__get",
+      "method": "GET",
+      "path": "/platform/v1/activity/{activity_id}",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:get_activity_platform_v1_activity__activity_id__get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "create_provisioning_request_platform_v1_agent_provisioning_requests_post",
+      "method": "POST",
+      "path": "/platform/v1/agent-provisioning/requests",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "#/components/schemas/ProvisioningCreate",
+      "response_schema": "none",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_provisioning_request_platform_v1_agent_provisioning_requests__request_id__get",
+      "method": "GET",
+      "path": "/platform/v1/agent-provisioning/requests/{request_id}",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "reactivate_provisioning_request_platform_v1_agent_provisioning_requests__request_id__reactivate_post",
+      "method": "POST",
+      "path": "/platform/v1/agent-provisioning/requests/{request_id}/reactivate",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "#/components/schemas/TransitionRequest",
+      "response_schema": "none",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "reconcile_provisioning_request_platform_v1_agent_provisioning_requests__request_id__reconcile_post",
+      "method": "POST",
+      "path": "/platform/v1/agent-provisioning/requests/{request_id}/reconcile",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "#/components/schemas/TransitionRequest",
+      "response_schema": "none",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "revoke_provisioning_request_platform_v1_agent_provisioning_requests__request_id__revoke_post",
+      "method": "POST",
+      "path": "/platform/v1/agent-provisioning/requests/{request_id}/revoke",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "#/components/schemas/TransitionRequest",
+      "response_schema": "none",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "suspend_provisioning_request_platform_v1_agent_provisioning_requests__request_id__suspend_post",
+      "method": "POST",
+      "path": "/platform/v1/agent-provisioning/requests/{request_id}/suspend",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "#/components/schemas/TransitionRequest",
+      "response_schema": "none",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "list_agents_presence_platform_v1_agents_presence_get",
+      "method": "GET",
+      "path": "/platform/v1/agents/presence",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:list_agents_presence_platform_v1_agents_presence_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_agent_presence_platform_v1_agents__user_id__presence_get",
+      "method": "GET",
+      "path": "/platform/v1/agents/{user_id}/presence",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:get_agent_presence_platform_v1_agents__user_id__presence_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "list_calls_platform_v1_calls_get",
+      "method": "GET",
+      "path": "/platform/v1/calls",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:list_calls_platform_v1_calls_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_call_platform_v1_calls__call_id__get",
+      "method": "GET",
+      "path": "/platform/v1/calls/{call_id}",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:get_call_platform_v1_calls__call_id__get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "list_campaigns_platform_v1_campaigns_get",
+      "method": "GET",
+      "path": "/platform/v1/campaigns",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:list_campaigns_platform_v1_campaigns_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_campaign_platform_v1_campaigns__campaign_id__get",
+      "method": "GET",
+      "path": "/platform/v1/campaigns/{campaign_id}",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:get_campaign_platform_v1_campaigns__campaign_id__get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_campaign_channels_platform_v1_campaigns__campaign_id__channels_get",
+      "method": "GET",
+      "path": "/platform/v1/campaigns/{campaign_id}/channels",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:get_campaign_channels_platform_v1_campaigns__campaign_id__channels_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_campaign_health_platform_v1_campaigns__campaign_id__health_get",
+      "method": "GET",
+      "path": "/platform/v1/campaigns/{campaign_id}/health",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:get_campaign_health_platform_v1_campaigns__campaign_id__health_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "list_campaign_members_platform_v1_campaigns__campaign_id__members_get",
+      "method": "GET",
+      "path": "/platform/v1/campaigns/{campaign_id}/members",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:list_campaign_members_platform_v1_campaigns__campaign_id__members_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "list_email_identities_platform_v1_email_identities_get",
+      "method": "GET",
+      "path": "/platform/v1/email/identities",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:list_email_identities_platform_v1_email_identities_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "activate_platform_v1_email_production_activate_post",
+      "method": "POST",
+      "path": "/platform/v1/email/production/activate",
+      "classification": "shared_edge",
+      "calling_client": "production-operator",
+      "audience": "middleware-api",
+      "scope": "email.production.write",
+      "auth": "service-or-user-jwt",
+      "request_schema": "#/components/schemas/app__email_production_control__ControlMutation",
+      "response_schema": "#/components/schemas/EmailProductionPolicy",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "audit_platform_v1_email_production_audit_get",
+      "method": "GET",
+      "path": "/platform/v1/email/production/audit",
+      "classification": "shared_edge",
+      "calling_client": "production-operator",
+      "audience": "middleware-api",
+      "scope": "email.production.read",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:audit_platform_v1_email_production_audit_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "authorize_platform_v1_email_production_authorize_post",
+      "method": "POST",
+      "path": "/platform/v1/email/production/authorize",
+      "classification": "shared_edge",
+      "calling_client": "production-operator",
+      "audience": "middleware-api",
+      "scope": "email.production.write",
+      "auth": "service-or-user-jwt",
+      "request_schema": "#/components/schemas/AuthorizeEmailProduction",
+      "response_schema": "#/components/schemas/EmailProductionPolicy",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "kill_switch_platform_v1_email_production_kill_switch_post",
+      "method": "POST",
+      "path": "/platform/v1/email/production/kill-switch",
+      "classification": "shared_edge",
+      "calling_client": "production-operator",
+      "audience": "middleware-api",
+      "scope": "email.production.write",
+      "auth": "service-or-user-jwt",
+      "request_schema": "#/components/schemas/KillSwitchMutation",
+      "response_schema": "#/components/schemas/EmailProductionPolicy",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "quotas_platform_v1_email_production_quotas_get",
+      "method": "GET",
+      "path": "/platform/v1/email/production/quotas",
+      "classification": "shared_edge",
+      "calling_client": "production-operator",
+      "audience": "middleware-api",
+      "scope": "email.production.read",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:quotas_platform_v1_email_production_quotas_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "readiness_platform_v1_email_production_readiness_get",
+      "method": "GET",
+      "path": "/platform/v1/email/production/readiness",
+      "classification": "shared_edge",
+      "calling_client": "production-operator",
+      "audience": "middleware-api",
+      "scope": "email.production.read",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:readiness_platform_v1_email_production_readiness_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "revoke_platform_v1_email_production_revoke_post",
+      "method": "POST",
+      "path": "/platform/v1/email/production/revoke",
+      "classification": "shared_edge",
+      "calling_client": "production-operator",
+      "audience": "middleware-api",
+      "scope": "email.production.write",
+      "auth": "service-or-user-jwt",
+      "request_schema": "#/components/schemas/app__email_production_control__ControlMutation",
+      "response_schema": "#/components/schemas/EmailProductionPolicy",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "status_platform_v1_email_production_status_get",
+      "method": "GET",
+      "path": "/platform/v1/email/production/status",
+      "classification": "shared_edge",
+      "calling_client": "production-operator",
+      "audience": "middleware-api",
+      "scope": "email.production.read",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "#/components/schemas/EmailProductionPolicy",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "hosts_platform_v1_hosts_get",
+      "method": "GET",
+      "path": "/platform/v1/hosts",
+      "classification": "shared_edge",
+      "calling_client": "platform-operator",
+      "audience": "middleware-api",
+      "scope": "platform.services.read",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "#/components/schemas/Envelope",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "host_platform_v1_hosts__host_id__get",
+      "method": "GET",
+      "path": "/platform/v1/hosts/{host_id}",
+      "classification": "shared_edge",
+      "calling_client": "platform-operator",
+      "audience": "middleware-api",
+      "scope": "platform.services.read",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "#/components/schemas/Envelope",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "github_event_platform_v1_integrations_github_events_post",
+      "method": "POST",
+      "path": "/platform/v1/integrations/github/events",
+      "classification": "shared_edge",
+      "calling_client": "github-app",
+      "audience": "middleware-api",
+      "scope": "github.webhooks.publish",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "#/components/schemas/Envelope",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_my_presence_platform_v1_me_presence_get",
+      "method": "GET",
+      "path": "/platform/v1/me/presence",
+      "classification": "shared_edge",
+      "calling_client": "browser-session",
+      "audience": "middleware-api",
+      "scope": "identity.session",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:get_my_presence_platform_v1_me_presence_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "list_queues_platform_v1_queues_get",
+      "method": "GET",
+      "path": "/platform/v1/queues",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:list_queues_platform_v1_queues_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_queue_platform_v1_queues__queue_id__get",
+      "method": "GET",
+      "path": "/platform/v1/queues/{queue_id}",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:get_queue_platform_v1_queues__queue_id__get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "list_queue_calls_platform_v1_queues__queue_id__calls_get",
+      "method": "GET",
+      "path": "/platform/v1/queues/{queue_id}/calls",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:list_queue_calls_platform_v1_queues__queue_id__calls_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "list_queue_members_platform_v1_queues__queue_id__members_get",
+      "method": "GET",
+      "path": "/platform/v1/queues/{queue_id}/members",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:list_queue_members_platform_v1_queues__queue_id__members_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_queue_metrics_platform_v1_queues__queue_id__metrics_get",
+      "method": "GET",
+      "path": "/platform/v1/queues/{queue_id}/metrics",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:get_queue_metrics_platform_v1_queues__queue_id__metrics_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "repositories_platform_v1_repositories_get",
+      "method": "GET",
+      "path": "/platform/v1/repositories",
+      "classification": "shared_edge",
+      "calling_client": "platform-operator",
+      "audience": "middleware-api",
+      "scope": "platform.services.read",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "#/components/schemas/Envelope",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "observe_platform_v1_runtime_observations_post",
+      "method": "POST",
+      "path": "/platform/v1/runtime/observations",
+      "classification": "shared_edge",
+      "calling_client": "observability-collector",
+      "audience": "middleware-api",
+      "scope": "platform.runtime.observe",
+      "auth": "service-or-user-jwt",
+      "request_schema": "#/components/schemas/Observation",
+      "response_schema": "#/components/schemas/Envelope",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "contract_refresh_platform_v1_services__service_id__contract_refresh_post",
+      "method": "POST",
+      "path": "/platform/v1/services/{service_id}/contract-refresh",
+      "classification": "shared_edge",
+      "calling_client": "platform-operator",
+      "audience": "middleware-api",
+      "scope": "platform.services.write",
+      "auth": "service-or-user-jwt",
+      "request_schema": "#/components/schemas/ContractRefresh",
+      "response_schema": "#/components/schemas/Envelope",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "coverage_platform_v1_services__service_id__coverage_get",
+      "method": "GET",
+      "path": "/platform/v1/services/{service_id}/coverage",
+      "classification": "shared_edge",
+      "calling_client": "platform-operator",
+      "audience": "middleware-api",
+      "scope": "observability.health.read",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "#/components/schemas/Envelope",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "dependencies_platform_v1_services__service_id__dependencies_get",
+      "method": "GET",
+      "path": "/platform/v1/services/{service_id}/dependencies",
+      "classification": "shared_edge",
+      "calling_client": "platform-operator",
+      "audience": "middleware-api",
+      "scope": "platform.services.read",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "#/components/schemas/Envelope",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "deployments_platform_v1_services__service_id__deployments_get",
+      "method": "GET",
+      "path": "/platform/v1/services/{service_id}/deployments",
+      "classification": "shared_edge",
+      "calling_client": "platform-operator",
+      "audience": "middleware-api",
+      "scope": "platform.services.read",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "#/components/schemas/Envelope",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "endpoints_platform_v1_services__service_id__endpoints_get",
+      "method": "GET",
+      "path": "/platform/v1/services/{service_id}/endpoints",
+      "classification": "shared_edge",
+      "calling_client": "platform-operator",
+      "audience": "middleware-api",
+      "scope": "platform.services.read",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "#/components/schemas/Envelope",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "profile_platform_v1_services__service_id__telemetry_profile_post",
+      "method": "POST",
+      "path": "/platform/v1/services/{service_id}/telemetry-profile",
+      "classification": "shared_edge",
+      "calling_client": "platform-operator",
+      "audience": "middleware-api",
+      "scope": "platform.services.write",
+      "auth": "service-or-user-jwt",
+      "request_schema": "#/components/schemas/Profile",
+      "response_schema": "#/components/schemas/Envelope",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_session_context_platform_v1_session_context_get",
+      "method": "GET",
+      "path": "/platform/v1/session/context",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:get_session_context_platform_v1_session_context_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "select_session_context_platform_v1_session_context_select_post",
+      "method": "POST",
+      "path": "/platform/v1/session/context/select",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "#/components/schemas/ContextSelectRequest",
+      "response_schema": "openapi:inline:select_session_context_platform_v1_session_context_select_post:response",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "list_sms_identities_platform_v1_sms_identities_get",
+      "method": "GET",
+      "path": "/platform/v1/sms/identities",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:list_sms_identities_platform_v1_sms_identities_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "reconcile_platform_v1_sync_reconciliations_post",
+      "method": "POST",
+      "path": "/platform/v1/sync/reconciliations",
+      "classification": "shared_edge",
+      "calling_client": "platform-operator",
+      "audience": "middleware-api",
+      "scope": "platform.sync.reconcile",
+      "auth": "service-or-user-jwt",
+      "request_schema": "#/components/schemas/Reconciliation",
+      "response_schema": "#/components/schemas/Envelope",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "reconciliation_result_platform_v1_sync_reconciliations__reconciliation_id__get",
+      "method": "GET",
+      "path": "/platform/v1/sync/reconciliations/{reconciliation_id}",
+      "classification": "shared_edge",
+      "calling_client": "platform-operator",
+      "audience": "middleware-api",
+      "scope": "platform.sync.read",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "#/components/schemas/Envelope",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "sync_status_platform_v1_sync_status_get",
+      "method": "GET",
+      "path": "/platform/v1/sync/status",
+      "classification": "shared_edge",
+      "calling_client": "platform-operator",
+      "audience": "middleware-api",
+      "scope": "platform.sync.read",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "#/components/schemas/Envelope",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "heartbeat_platform_v1_telemetry_heartbeats_post",
+      "method": "POST",
+      "path": "/platform/v1/telemetry/heartbeats",
+      "classification": "shared_edge",
+      "calling_client": "observability-collector",
+      "audience": "middleware-api",
+      "scope": "telemetry.heartbeat.write",
+      "auth": "service-or-user-jwt",
+      "request_schema": "#/components/schemas/Heartbeat",
+      "response_schema": "#/components/schemas/Envelope",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "list_telephony_assignments_platform_v1_telephony_assignments_get",
+      "method": "GET",
+      "path": "/platform/v1/telephony/assignments",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:list_telephony_assignments_platform_v1_telephony_assignments_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "list_tenants_platform_v1_tenants_get",
+      "method": "GET",
+      "path": "/platform/v1/tenants",
+      "classification": "shared_edge",
+      "calling_client": "platform-operator",
+      "audience": "middleware-api",
+      "scope": "platform.tenants.read",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:list_tenants_platform_v1_tenants_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "list_authorized_tenants_platform_v1_tenants_authorized_get",
+      "method": "GET",
+      "path": "/platform/v1/tenants/authorized",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:list_authorized_tenants_platform_v1_tenants_authorized_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_tenant_platform_v1_tenants__tenant_id__get",
+      "method": "GET",
+      "path": "/platform/v1/tenants/{tenant_id}",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:get_tenant_platform_v1_tenants__tenant_id__get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "list_tenant_campaigns_platform_v1_tenants__tenant_id__campaigns_get",
+      "method": "GET",
+      "path": "/platform/v1/tenants/{tenant_id}/campaigns",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:list_tenant_campaigns_platform_v1_tenants__tenant_id__campaigns_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_tenant_health_platform_v1_tenants__tenant_id__health_get",
+      "method": "GET",
+      "path": "/platform/v1/tenants/{tenant_id}/health",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:get_tenant_health_platform_v1_tenants__tenant_id__health_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_user_platform_v1_users__employee_id__get",
+      "method": "GET",
+      "path": "/platform/v1/users/{employee_id}",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:get_user_platform_v1_users__employee_id__get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_user_campaigns_platform_v1_users__employee_id__campaigns_get",
+      "method": "GET",
+      "path": "/platform/v1/users/{employee_id}/campaigns",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:get_user_campaigns_platform_v1_users__employee_id__campaigns_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "get_user_entitlements_platform_v1_users__employee_id__entitlements_get",
+      "method": "GET",
+      "path": "/platform/v1/users/{employee_id}/entitlements",
+      "classification": "shared_edge",
+      "calling_client": "authorized-provisioning-client",
+      "audience": "middleware-api",
+      "scope": "identity.request",
+      "auth": "service-or-user-jwt",
+      "request_schema": "none",
+      "response_schema": "openapi:inline:get_user_entitlements_platform_v1_users__employee_id__entitlements_get:response",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "request_automation_approval_v2_automation_approvals_post",
+      "method": "POST",
+      "path": "/v2/automation/approvals",
+      "classification": "shared_edge",
+      "calling_client": "job_family_client_only",
+      "audience": "middleware-api",
+      "scope": "automation.approval.request",
+      "auth": "automation-service-jwt",
+      "request_schema": "#/components/schemas/ApprovalRequest",
+      "response_schema": "none",
+      "idempotency": {
+        "required": true,
+        "carrier": "body.idempotency_key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "read_automation_approval_v2_automation_approvals__approval_id__get",
+      "method": "GET",
+      "path": "/v2/automation/approvals/{approval_id}",
+      "classification": "shared_edge",
+      "calling_client": "approval_job_family_client_only",
+      "audience": "middleware-api",
+      "scope": "automation.approval.read",
+      "auth": "automation-service-jwt",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "read_automation_capability_v2_automation_capabilities__capability__get",
+      "method": "GET",
+      "path": "/v2/automation/capabilities/{capability}",
+      "classification": "shared_edge",
+      "calling_client": "all_declared_clients",
+      "audience": "middleware-api",
+      "scope": "automation.capability.read",
+      "auth": "automation-service-jwt",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "submit_automation_command_v2_automation_commands_post",
+      "method": "POST",
+      "path": "/v2/automation/commands",
+      "classification": "shared_edge",
+      "calling_client": "command_prefix_client_only",
+      "audience": "middleware-api",
+      "scope": "resolved_from_command_prefix",
+      "auth": "automation-service-jwt",
+      "request_schema": "#/components/schemas/AutomationCommandRequest",
+      "response_schema": "none",
+      "idempotency": {
+        "required": true,
+        "carrier": "body.idempotency_key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "read_automation_command_v2_automation_commands__command_id__get",
+      "method": "GET",
+      "path": "/v2/automation/commands/{command_id}",
+      "classification": "shared_edge",
+      "calling_client": "command_family_client_only",
+      "audience": "middleware-api",
+      "scope": "automation.command.read",
+      "auth": "automation-service-jwt",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "replay_automation_dead_letter_v2_automation_dead_letters__dead_letter_id__replay_post",
+      "method": "POST",
+      "path": "/v2/automation/dead-letters/{dead_letter_id}/replay",
+      "classification": "shared_edge",
+      "calling_client": [
+        "n8n-operations-automation"
+      ],
+      "audience": "middleware-api",
+      "scope": "automation.operations.replay.request",
+      "auth": "automation-service-jwt",
+      "request_schema": "#/components/schemas/DeadLetterReplayRequest",
+      "response_schema": "none",
+      "idempotency": {
+        "required": true,
+        "carrier": "body.idempotency_key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "claim_automation_job_v2_automation_jobs_claim_post",
+      "method": "POST",
+      "path": "/v2/automation/jobs/claim",
+      "classification": "shared_edge",
+      "calling_client": "all_declared_clients",
+      "audience": "middleware-api",
+      "scope": "automation.job.claim",
+      "auth": "automation-service-jwt",
+      "request_schema": "#/components/schemas/JobClaimRequest",
+      "response_schema": "none",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "reconcile_automation_jobs_v2_automation_jobs_reconcile_post",
+      "method": "POST",
+      "path": "/v2/automation/jobs/reconcile",
+      "classification": "shared_edge",
+      "calling_client": [
+        "n8n-operations-automation"
+      ],
+      "audience": "middleware-api",
+      "scope": "automation.operations.reconcile",
+      "auth": "automation-service-jwt",
+      "request_schema": "#/components/schemas/ReconciliationRequest",
+      "response_schema": "none",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "read_automation_job_v2_automation_jobs__job_id__get",
+      "method": "GET",
+      "path": "/v2/automation/jobs/{job_id}",
+      "classification": "shared_edge",
+      "calling_client": "job_family_client_only",
+      "audience": "middleware-api",
+      "scope": "automation.job.read",
+      "auth": "automation-service-jwt",
+      "request_schema": "none",
+      "response_schema": "none",
+      "idempotency": {
+        "required": false,
+        "carrier": "none",
+        "replay": "safe-read"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "complete_automation_job_v2_automation_jobs__job_id__complete_post",
+      "method": "POST",
+      "path": "/v2/automation/jobs/{job_id}/complete",
+      "classification": "shared_edge",
+      "calling_client": "job_family_client_only",
+      "audience": "middleware-api",
+      "scope": "automation.job.complete",
+      "auth": "automation-service-jwt",
+      "request_schema": "#/components/schemas/TerminalResult",
+      "response_schema": "none",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "fail_automation_job_v2_automation_jobs__job_id__fail_post",
+      "method": "POST",
+      "path": "/v2/automation/jobs/{job_id}/fail",
+      "classification": "shared_edge",
+      "calling_client": "job_family_client_only",
+      "audience": "middleware-api",
+      "scope": "automation.job.fail",
+      "auth": "automation-service-jwt",
+      "request_schema": "#/components/schemas/FailureResult",
+      "response_schema": "none",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "heartbeat_automation_job_v2_automation_jobs__job_id__heartbeat_post",
+      "method": "POST",
+      "path": "/v2/automation/jobs/{job_id}/heartbeat",
+      "classification": "shared_edge",
+      "calling_client": "job_family_client_only",
+      "audience": "middleware-api",
+      "scope": "automation.job.heartbeat",
+      "auth": "automation-service-jwt",
+      "request_schema": "#/components/schemas/HeartbeatRequest",
+      "response_schema": "none",
+      "idempotency": {
+        "required": true,
+        "carrier": "Idempotency-Key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    },
+    {
+      "operation_id": "record_automation_step_v2_automation_jobs__job_id__steps_post",
+      "method": "POST",
+      "path": "/v2/automation/jobs/{job_id}/steps",
+      "classification": "shared_edge",
+      "calling_client": "job_family_client_only",
+      "audience": "middleware-api",
+      "scope": "automation.job.step.write",
+      "auth": "automation-service-jwt",
+      "request_schema": "#/components/schemas/StepRecord",
+      "response_schema": "none",
+      "idempotency": {
+        "required": true,
+        "carrier": "body.idempotency_key",
+        "replay": "return-original"
+      },
+      "correlation_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "echo_fields": [
+        "X-Correlation-ID",
+        "body.correlation_id"
+      ],
+      "error_statuses": [
+        400,
+        401,
+        403,
+        404,
+        409,
+        429,
+        503
+      ],
+      "owner": "middleware",
+      "upstream": "middleware-integration-api:8095"
+    }
+  ]
+}

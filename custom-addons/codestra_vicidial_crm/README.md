@@ -24,7 +24,7 @@ Configure these values in the Odoo service environment:
 - `CODESTRA_TELEPHONY_CA_FILE`: optional absolute CA bundle for the OIDC endpoint;
   otherwise the system trust store is used.
 
-The client uses `client_credentials` with `scope=telephony:command`. Configure
+The client uses `client_credentials` with `scope=telephony.commands.write`. Configure
 the identity provider to return that scope explicitly, a Bearer access token,
 and `expires_in` longer than the ten-second command timeout. Its issuer,
 audience and authorized tenant/campaign/actor claims must match Middleware's

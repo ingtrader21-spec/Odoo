@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "internal://odoo/automation-results/v1",
+  "title": "n8n automation result delivery (Middleware -> Odoo)",
+  "description": "Replaces the retired campaign-actions route. Odoo deduplicates on idempotency_key and returns the original receipt_id on replay.",
+  "$defs": {
+    "request": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "event_id",
+        "correlation_id",
+        "causation_id",
+        "idempotency_key",
+        "environment",
+        "business_unit_public_id",
+        "campaign_public_id",
+        "actor_type",
+        "actor_id",
+        "workflow_key",
+        "execution_id",
+        "actions"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "correlation_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "causation_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "environment": {
+          "type": "string"
+        },
+        "business_unit_public_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "campaign_public_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "actor_type": {
+          "type": "string"
+        },
+        "actor_id": {
+          "type": "string"
+        },
+        "workflow_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "execution_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "actions": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "object",
+            "required": [
+              "action_type",
+              "entity_type",
+              "entity_id",
+              "values"
+            ],
+            "properties": {
+              "action_type": {
+                "type": "string",
+                "enum": [
+                  "CREATE_INTERNAL_SUMMARY",
+                  "SET_NEXT_ACTION",
+                  "CHANGE_STATUS"
+                ]
+              },
+              "entity_type": {
+                "type": "string"
+              },
+              "entity_id": {
+                "type": "string"
+              },
+              "values": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "object",
+      "required": [
+        "status",
+        "event_id",
+        "execution_id",
+        "correlation_id",
+        "receipt_id"
+      ],
+      "properties": {
+        "status": {
+          "const": "APPLIED"
+        },
+        "event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "execution_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "correlation_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "receipt_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "internal://odoo/campaigns/read/v1",
+  "title": "Campaign read (Middleware -> Odoo)",
+  "description": "",
+  "$defs": {
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "organization_public_id",
+        "business_unit_public_id",
+        "campaign_public_id"
+      ],
+      "properties": {
+        "organization_public_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "business_unit_public_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "campaign_public_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    },
+    "response": {
+      "type": "object",
+      "required": [
+        "campaign_public_id",
+        "organization_public_id",
+        "business_unit_public_id",
+        "configuration_version",
+        "lifecycle_status"
+      ],
+      "properties": {
+        "organization_public_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "business_unit_public_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "campaign_public_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "configuration_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "lifecycle_status": {
+          "type": "string",
+          "description": "Odoo control/lifecycle status (draft, validated, blocked, ...); never an effective_state."
+        },
+        "effective_state": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "absent",
+            "provisioned_disabled",
+            "synthetic_tested",
+            "active",
+            "disabled"
+          ]
+        },
+        "desired_state": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "absent",
+            "provisioned_disabled",
+            "synthetic_tested",
+            "active",
+            "disabled"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -498,7 +498,7 @@ class TelephonyCommandOidcTest(unittest.TestCase):
         }
         self.token_body = {
             "token_type": "Bearer", "access_token": "synthetic-oidc-token",
-            "expires_in": 60, "scope": "openid telephony:command",
+            "expires_in": 60, "scope": "openid telephony.commands.write",
         }
 
     @contextlib.contextmanager
@@ -526,7 +526,7 @@ class TelephonyCommandOidcTest(unittest.TestCase):
         form = self.module.urllib.parse.parse_qs(token_request.data.decode())
         self.assertEqual(form, {
             "grant_type": ["client_credentials"], "client_id": ["odoo-telephony"],
-            "client_secret": ["synthetic-secret"], "scope": ["telephony:command"],
+            "client_secret": ["synthetic-secret"], "scope": ["telephony.commands.write"],
         })
         self.assertEqual(opener.open.call_args_list[1].args[0].get_header("Authorization"),
                          "Bearer synthetic-oidc-token")
@@ -564,7 +564,7 @@ class TelephonyCommandOidcTest(unittest.TestCase):
                 self.assertEqual(opener.open.call_count, 1)
 
     def test_malformed_or_unbounded_token_response_is_rejected(self):
-        for body in (b"[]", b"not-json", b'{"scope":"x","scope":"telephony:command"}',
+        for body in (b"[]", b"not-json", b'{"scope":"x","scope":"telephony.commands.write"}',
                      b"x" * (self.module._MAX_MESSAGE_BYTES + 1)):
             with self.subTest(body_length=len(body)), self.transport(body):
                 with self.assertRaises(self.module.OriginateRejected):

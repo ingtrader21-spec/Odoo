@@ -1,20 +1,62 @@
 import base64
 import hashlib
 import json
+import logging
 import os
 import time
 from datetime import datetime, timedelta, timezone
 from urllib import parse as urlparse
 from urllib import request as urlrequest
-from uuid import uuid4
+from uuid import NAMESPACE_URL, uuid4, uuid5
 
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from cryptography.hazmat.primitives.hashes import SHA256
 from markupsafe import Markup, escape
 from odoo import fields, http
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.http import Response, request
+
+from ..models.automation_results import AUTOMATION_ACTION_TYPES, public_record_id
+
+_logger = logging.getLogger(__name__)
+# SQLSTATE values read from the driver exception without importing the driver:
+# 40001 serialization failure, 40P01 deadlock, 55P03 lock unavailable are
+# re-raised so the Odoo dispatcher retries the whole request.
+PG_RETRYABLE_SQLSTATES = {"40001", "40P01", "55P03"}
+# Only these expected uniqueness races mean "already applied" and map to 409.
+# Any other integrity failure is an unknown fault and stays a sanitized 500.
+CONFLICT_CONSTRAINTS = {
+    "codestra_runtime_integration_outbox_event_uuid_unique",
+    "codestra_runtime_integration_outbox_event_key_unique",
+    "codestra_runtime_integration_outbox_environment_idempotency_unique",
+    "codestra_integration_idempotency_scope_key_unique",
+    "codestra_integration_callback_nonce_service_nonce_unique",
+}
+INTEGRATION_READ_SCOPE = "odoo.integration.read"
+RETIRED_ROUTES = {
+    "/api/v1/integration/campaign-actions": "automation_results.apply",
+}
+# Request schemas pinned by contracts/odoo/schemas (required properties).
+AUTOMATION_RESULT_REQUIRED_FIELDS = frozenset(
+    {
+        "schema_version", "event_id", "correlation_id", "causation_id",
+        "idempotency_key", "environment", "business_unit_public_id",
+        "campaign_public_id", "actor_type", "actor_id", "workflow_key",
+        "execution_id", "actions",
+    }
+)
+PROVIDER_ACTIVITY_REQUIRED_FIELDS = frozenset(
+    {
+        "operation", "event_id", "environment", "organization_public_id",
+        "business_unit_public_id", "campaign_public_id",
+    }
+)
+
+
+def register_conflict_constraints(*names):
+    """Extensions declare their own expected uniqueness conflicts."""
+    CONFLICT_CONSTRAINTS.update(names)
 
 MAX_BODY_BYTES = 65536
 TOKEN_CLOCK_SKEW_SECONDS = 30
@@ -33,12 +75,30 @@ class IntegrationNotFound(IntegrationRejected):
     status = 404
 
 
+class IntegrationForbidden(IntegrationRejected):
+    status = 403
+
+
+class IntegrationGone(IntegrationRejected):
+    status = 410
+
+
 def _b64url(value):
     decoded = base64.urlsafe_b64decode(value + "=" * (-len(value) % 4))
     canonical = base64.urlsafe_b64encode(decoded).rstrip(b"=").decode("ascii")
     if canonical != value:
         raise ValueError("non-canonical base64url")
     return decoded
+
+
+def _response_correlation_id():
+    """Echo the caller correlation ID so every response, including a sanitized
+    500, can be traced; fall back to a fresh identifier outside a request."""
+    try:
+        supplied = request.httprequest.headers.get("X-Codestra-Correlation-ID")
+    except (AttributeError, RuntimeError):
+        supplied = None
+    return str(supplied) if supplied and len(str(supplied)) <= 128 else str(uuid4())
 
 
 def _json_response(document, status=200):
@@ -51,7 +111,7 @@ def _json_response(document, status=200):
         content_type="application/json",
         headers={
             "Cache-Control": "no-store",
-            "X-Correlation-ID": str(uuid4()),
+            "X-Correlation-ID": _response_correlation_id(),
         },
     )
 
@@ -363,6 +423,7 @@ def _outbox_document(record, lease_token=None):
     document = {
         "outbox_public_id": record.event_uuid,
         "event_id": record.event_uuid,
+        "command_id": record.event_uuid,
         "event_type": record.event_type,
         "schema_version": record.schema_version,
         "record_environment": record.record_environment,
@@ -417,6 +478,10 @@ def _handle_errors(callback):
             if isinstance(exc, IntegrationConflict)
             else "NOT_FOUND"
             if isinstance(exc, IntegrationNotFound)
+            else "FORBIDDEN"
+            if isinstance(exc, IntegrationForbidden)
+            else "GONE"
+            if isinstance(exc, IntegrationGone)
             else "REJECTED"
         )
         return _json_response(
@@ -429,6 +494,32 @@ def _handle_errors(callback):
                 },
             },
             exc.status,
+        )
+    except AccessError as exc:
+        request.env.cr.rollback()
+        return _json_response(
+            {
+                "status": "REJECTED",
+                "error": {
+                    "code": str(exc),
+                    "classification": "FORBIDDEN",
+                    "retryable": False,
+                },
+            },
+            403,
+        )
+    except MissingError as exc:
+        request.env.cr.rollback()
+        return _json_response(
+            {
+                "status": "REJECTED",
+                "error": {
+                    "code": str(exc),
+                    "classification": "NOT_FOUND",
+                    "retryable": False,
+                },
+            },
+            404,
         )
     except (KeyError, TypeError, ValueError, ValidationError) as exc:
         request.env.cr.rollback()
@@ -443,7 +534,43 @@ def _handle_errors(callback):
             },
             422,
         )
-
+    except Exception as exc:
+        pgcode = str(getattr(exc, "pgcode", None) or "")
+        if pgcode in PG_RETRYABLE_SQLSTATES:
+            # Serialization failures and deadlocks must reach the Odoo
+            # dispatcher, which retries the whole request.
+            raise
+        request.env.cr.rollback()
+        constraint = getattr(getattr(exc, "diag", None), "constraint_name", None)
+        if constraint in CONFLICT_CONSTRAINTS:
+            # An allowlisted uniqueness race means the mutation was already
+            # applied concurrently; the code names the constraint, never SQL.
+            return _json_response(
+                {
+                    "status": "REJECTED",
+                    "error": {
+                        "code": constraint,
+                        "classification": "CONFLICT",
+                        "retryable": False,
+                    },
+                },
+                409,
+            )
+        # Unknown failures never leak internals; the correlation header lets
+        # operators find the logged traceback.
+        _logger.exception("Unhandled integration API failure")
+        return _json_response(
+            {
+                "status": "ERROR",
+                "error": {
+                    "code": "INTERNAL_ERROR",
+                    "classification": "INTERNAL",
+                    "retryable": True,
+                },
+                "correlation_id": _response_correlation_id(),
+            },
+            500,
+        )
 
 
 def _explicit_result_outcome(event_type, body):
@@ -462,6 +589,35 @@ def _explicit_result_outcome(event_type, body):
 
 
 class CodestraIntegrationApiController(http.Controller):
+    def _capability_keys(self):
+        """Contract operation keys served by this module; extensions append.
+
+        Keys equal ``operations`` keys of contracts/odoo/campaign-control.v1.json
+        for every Middleware-facing route this module serves, plus Odoo-only
+        reads. Retired operations are never advertised.
+        """
+        return [
+            "outbox.claim",
+            "outbox.read",
+            "outbox.renew",
+            "outbox.acknowledge",
+            "outbox.fail",
+            "outbox.release",
+            "results.create",
+            "results.read",
+            "results.by_delivery",
+            "results.reconcile",
+            "automation_results.apply",
+            "provider_activities.create",
+            "agents.read",
+            "leads.read",
+            "traces.read",
+            "audit.read",
+            "telephony.projections.read",
+            "telephony.mappings.read",
+            "reconciliation.read",
+        ]
+
     @http.route(
         ["/api/v1/integration/capabilities", "/capabilities"],
         type="http",
@@ -477,23 +633,7 @@ class CodestraIntegrationApiController(http.Controller):
                     "schema_version": "1.0",
                     "service_key": "odoo",
                     "api_version": "v1",
-                    "capabilities": [
-                        "outbox.claim",
-                        "outbox.read",
-                        "outbox.renew",
-                        "outbox.acknowledge",
-                        "outbox.fail",
-                        "outbox.release",
-                        "results.create",
-                        "results.read",
-                        "results.reconcile",
-                        "desired_state.read",
-                        "traces.read",
-                        "audit.read",
-                        "telephony.projections.read",
-                        "telephony.mappings.read",
-                        "reconciliation.read",
-                    ],
+                    "capabilities": self._capability_keys(),
                     "maintenance_mode": _runtime_flag(
                         "CODESTRA_ODOO_MAINTENANCE_MODE"
                     ),
@@ -580,7 +720,10 @@ class CodestraIntegrationApiController(http.Controller):
         return _handle_errors(operation)
 
     @http.route(
-        "/api/v1/integration/outbox/<string:outbox_id>/lease/renew",
+        [
+            "/api/v1/integration/outbox/<string:outbox_id>/renewals",
+            "/api/v1/integration/outbox/<string:outbox_id>/lease/renew",
+        ],
         type="http",
         auth="none",
         methods=["POST"],
@@ -635,6 +778,7 @@ class CodestraIntegrationApiController(http.Controller):
                     "lease_heartbeat_at": False,
                 }
             )
+            record._on_acknowledged()
         elif action == "fail":
             record._finalize_delivery_failure(
                 RuntimeError(str(body.get("error_classification", "safe failure")))
@@ -668,7 +812,10 @@ class CodestraIntegrationApiController(http.Controller):
         return _handle_errors(lambda: self._finish_outbox(outbox_id, "fail"))
 
     @http.route(
-        "/api/v1/integration/outbox/<string:outbox_id>/release",
+        [
+            "/api/v1/integration/outbox/<string:outbox_id>/releases",
+            "/api/v1/integration/outbox/<string:outbox_id>/release",
+        ],
         type="http",
         auth="none",
         methods=["POST"],
@@ -830,15 +977,8 @@ class CodestraIntegrationApiController(http.Controller):
     def create_provider_activity(self):
         def operation():
             claims, body, _ = _body(
-                {"odoo.provider.activities.write", "odoo.integration.results.write"},
-                {
-                    "operation",
-                    "event_id",
-                    "environment",
-                    "organization_public_id",
-                    "business_unit_public_id",
-                    "campaign_public_id",
-                },
+                "odoo.integration.provider_activities.write",
+                set(PROVIDER_ACTIVITY_REQUIRED_FIELDS),
             )
             _assert_organization_scope(claims, body["organization_public_id"])
             _assert_scope(
@@ -913,13 +1053,12 @@ class CodestraIntegrationApiController(http.Controller):
                     ("event_id", "=", registered["event"].id),
                     ("scope", "=", "odoo.provider.activity"),
                 ], limit=1).result_reference
-                _, partner_id, message_id = str(reference).split(":", 2)
+                _, _partner_id, message_id = str(reference).split(":", 2)
                 return _json_response({
                     "status": "APPLIED",
                     "event_id": body["event_id"],
                     "operation": provider_operation,
-                    "partner_id": int(partner_id),
-                    "message_id": int(message_id),
+                    "message_id": public_record_id("mail.message", int(message_id)),
                     "duplicate": True,
                     "correlation_id": request.httprequest.headers[
                         "X-Codestra-Correlation-ID"
@@ -959,8 +1098,7 @@ class CodestraIntegrationApiController(http.Controller):
                 "status": "APPLIED",
                 "event_id": body["event_id"],
                 "operation": provider_operation,
-                "partner_id": partners.id,
-                "message_id": message.id,
+                "message_id": public_record_id("mail.message", message.id),
                 "duplicate": False,
                 "correlation_id": request.httprequest.headers[
                     "X-Codestra-Correlation-ID"
@@ -970,7 +1108,125 @@ class CodestraIntegrationApiController(http.Controller):
         return _handle_errors(operation)
 
     @http.route(
+        "/api/v1/integration/automation-results",
+        type="http",
+        auth="none",
+        methods=["POST"],
+        csrf=False,
+        save_session=False,
+    )
+    def apply_automation_results(self):
+        """``automation_results.apply``: n8n CRM actions delivered by Middleware."""
+
+        def operation():
+            claims, body, _ = _body(
+                "odoo.integration.automation_results.write",
+                set(AUTOMATION_RESULT_REQUIRED_FIELDS),
+            )
+            if body["schema_version"] != "1.0":
+                raise ValueError("unsupported schema_version")
+            for name in ("event_id", "correlation_id", "causation_id", "workflow_key", "execution_id"):
+                if not isinstance(body[name], str) or not 1 <= len(body[name]) <= 128:
+                    raise ValueError(f"FIELD_INVALID:{name}")
+            for name in ("actor_type", "actor_id", "environment"):
+                if not isinstance(body[name], str) or not body[name]:
+                    raise ValueError(f"FIELD_INVALID:{name}")
+            actions = body["actions"]
+            if not isinstance(actions, list) or len(actions) > 100:
+                raise ValueError("FIELD_INVALID:actions")
+            unsupported = sorted(
+                {
+                    str(action.get("action_type"))
+                    for action in actions
+                    if not isinstance(action, dict) or action.get("action_type") not in AUTOMATION_ACTION_TYPES
+                }
+            )
+            if unsupported:
+                raise ValueError("UNSUPPORTED_ACTION_TYPE:" + ",".join(unsupported))
+            _assert_scope(
+                claims,
+                str(body["environment"]).upper(),
+                body["business_unit_public_id"],
+                body["campaign_public_id"],
+            )
+            service_user, business_unit = _provider_activity_service_scope(body)
+            campaign = request.env["call.center.campaign"].sudo().search(
+                [
+                    ("code", "=", body["campaign_public_id"]),
+                    ("business_unit_id", "=", business_unit.id),
+                ],
+                limit=1,
+            )
+            correlation_id = request.httprequest.headers["X-Codestra-Correlation-ID"]
+            ledger = request.env["codestra.integration.idempotency"].sudo()
+            registered = ledger.register_idempotent_event(
+                "odoo.automation.result",
+                body["idempotency_key"],
+                "automation.result." + body["workflow_key"],
+                "codestra-middleware",
+                "odoo",
+                body,
+                correlation_id,
+            )
+            if registered["conflict"]:
+                raise IntegrationConflict("automation result idempotency conflict")
+            receipt_id = str(
+                uuid5(NAMESPACE_URL, f"odoo:automation-result:{body['event_id']}:{body['execution_id']}")
+            )
+            if registered["replay"]:
+                return _json_response({
+                    "status": "APPLIED",
+                    "event_id": body["event_id"],
+                    "execution_id": body["execution_id"],
+                    "correlation_id": correlation_id,
+                    "receipt_id": receipt_id,
+                    "duplicate": True,
+                })
+            applied = (
+                request.env["crm.lead"]
+                .with_user(service_user)
+                .with_company(business_unit.company_id)
+                .apply_automation_result(
+                    campaign,
+                    actions,
+                    {"actor_type": body["actor_type"], "actor_id": body["actor_id"]},
+                )
+            )
+            registered["idempotency"].with_context(integration_ledger_write=True).write(
+                {"result_reference": f"automation_result:{receipt_id}"}
+            )
+            return _json_response({
+                "status": "APPLIED",
+                "event_id": body["event_id"],
+                "execution_id": body["execution_id"],
+                "correlation_id": correlation_id,
+                "receipt_id": receipt_id,
+                "duplicate": False,
+                "applied_actions": applied,
+            })
+
+        return _handle_errors(operation)
+
+    @http.route(
+        list(RETIRED_ROUTES),
+        type="http",
+        auth="none",
+        methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
+        csrf=False,
+        save_session=False,
+    )
+    def retired_route(self, **_kwargs):
+        """Retired Middleware-facing paths answer 410 and are never advertised."""
+
+        def operation():
+            replacement = RETIRED_ROUTES.get(request.httprequest.path, "")
+            raise IntegrationGone(f"ROUTE_RETIRED:{replacement}")
+
+        return _handle_errors(operation)
+
+    @http.route(
         [
+            "/api/v1/integration/results/by-delivery/<string:delivery_public_id>",
             "/api/v1/integration/results/<string:result_public_id>",
             "/api/v1/integration/results",
         ],
@@ -979,7 +1235,7 @@ class CodestraIntegrationApiController(http.Controller):
         methods=["GET"],
         csrf=False,
     )
-    def read_result(self, result_public_id=None, **query):
+    def read_result(self, result_public_id=None, delivery_public_id=None, **query):
         def operation():
             claims, _ = _authenticate(
                 b"", {"odoo.results.read", "odoo.integration.results.read"}
@@ -987,7 +1243,7 @@ class CodestraIntegrationApiController(http.Controller):
             domain = (
                 [("result_public_id", "=", result_public_id)]
                 if result_public_id
-                else [("delivery_id", "=", query.get("delivery_id"))]
+                else [("delivery_id", "=", delivery_public_id or query.get("delivery_id"))]
             )
             inbox = (
                 request.env["codestra.integration.result.inbox"]
@@ -1078,7 +1334,8 @@ class CodestraIntegrationApiController(http.Controller):
     def read_trace(self, correlation_id):
         def operation():
             claims, _ = _authenticate(
-                b"", {"odoo.traces.read", "odoo.integration.traces.read"}
+                b"",
+                {"odoo.traces.read", "odoo.integration.traces.read", INTEGRATION_READ_SCOPE},
             )
             traces = (
                 request.env["codestra.integration.trace"]
@@ -1211,7 +1468,9 @@ class CodestraIntegrationApiController(http.Controller):
     @http.route(
         [
             "/api/v1/integration/desired-state/<string:aggregate_type>/<string:public_id>",
+            "/api/v1/integration/agents",
             "/api/v1/integration/agents/<string:public_id>",
+            "/api/v1/integration/leads",
             "/api/v1/integration/leads/<string:public_id>",
             "/api/v1/integration/campaigns/<string:public_id>",
         ],
@@ -1220,21 +1479,27 @@ class CodestraIntegrationApiController(http.Controller):
         methods=["GET"],
         csrf=False,
     )
-    def read_desired_state(self, public_id, aggregate_type=None):
+    def read_desired_state(self, public_id=None, aggregate_type=None, **query):
         def operation():
             claims, _ = _authenticate(
                 b"",
                 {
                     "odoo.desired_state.read",
                     "odoo.integration.desired_state.read",
+                    INTEGRATION_READ_SCOPE,
                 },
             )
+            # The contract's collection reads carry the public id as a query
+            # parameter; the path form remains for existing callers.
+            resolved_id = public_id or query.get("public_id")
+            if not isinstance(resolved_id, str) or not resolved_id:
+                raise ValueError("public_id is required")
             route = request.httprequest.path
             kind = aggregate_type or (
                 "agent"
-                if "/agents/" in route
+                if "/agents" in route
                 else "lead"
-                if "/leads/" in route
+                if "/leads" in route
                 else "campaign"
             )
             if kind == "campaign":
@@ -1244,8 +1509,8 @@ class CodestraIntegrationApiController(http.Controller):
                     .search(
                         [
                             "|",
-                            ("code", "=", public_id),
-                            ("integration_uuid", "=", public_id),
+                            ("code", "=", resolved_id),
+                            ("integration_uuid", "=", resolved_id),
                         ],
                         limit=1,
                     )
@@ -1267,8 +1532,8 @@ class CodestraIntegrationApiController(http.Controller):
                     .search(
                         [
                             "|",
-                            ("integration_uuid", "=", public_id),
-                            ("external_source_id", "=", public_id),
+                            ("integration_uuid", "=", resolved_id),
+                            ("external_source_id", "=", resolved_id),
                         ],
                         limit=1,
                     )
@@ -1287,7 +1552,7 @@ class CodestraIntegrationApiController(http.Controller):
                 employee = (
                     request.env["hr.employee"]
                     .sudo()
-                    .search([("codestra_employee_number", "=", public_id)], limit=1)
+                    .search([("codestra_employee_number", "=", resolved_id)], limit=1)
                 )
                 record = employee
                 campaign = (
@@ -1309,7 +1574,7 @@ class CodestraIntegrationApiController(http.Controller):
                 record = (
                     request.env["codestra.telephony.desired.state"]
                     .sudo()
-                    .search([("state_public_id", "=", public_id)], limit=1)
+                    .search([("state_public_id", "=", resolved_id)], limit=1)
                 )
                 campaign = record.campaign_id
                 desired = (
@@ -1357,7 +1622,7 @@ class CodestraIntegrationApiController(http.Controller):
             document = {
                 "exists": True,
                 "aggregate_type": kind,
-                "aggregate_public_id": public_id,
+                "aggregate_public_id": resolved_id,
                 "environment": getattr(
                     record,
                     "record_environment",

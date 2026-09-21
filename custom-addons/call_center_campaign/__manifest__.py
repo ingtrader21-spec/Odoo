@@ -1,6 +1,6 @@
 {
     "name": "Call Center Campaign",
-    "version": "19.0.5.3.4",
+    "version": "19.0.5.4.0",
     "category": "Sales/CRM",
     "summary": "Campaigns, teams, scripts, lifecycle, and automatic design control",
     "author": "Codestra",
@@ -11,6 +11,7 @@
         "security/ir.model.access.csv",
         "security/record_rules.xml",
         "security/automatic_provisioning_security.xml",
+        "data/integration_nonce_cron.xml",
         "data/lifecycle_stages.xml",
         "data/lifecycle_stage_mappings.xml",
         "data/multi_business_master_data.xml",

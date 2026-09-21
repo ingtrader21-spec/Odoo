@@ -1,0 +1,7 @@
+{
+  "contract": "contracts/odoo/campaign-control.v1.json",
+  "hash_rule": "sha256 over json.dumps(document, sort_keys=True, separators=(',', ':')).encode('utf-8')",
+  "canonical_sha256": "874711f3a8c38bfb2c69169d5f7c1717897d48419ce60bf5649a899f023e1e03",
+  "middleware_pin": "Middleware- migrations/versions/0066_reconcile_odoo_campaign_scope.py CATALOG_SHA256",
+  "file_sha256": "dbd0e8c8e3a33491c7618f56377a501c3aacdd0486fdd2e579f23a27533fa980"
+}

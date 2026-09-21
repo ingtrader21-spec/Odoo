@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_cc_application_list" model="ir.ui.view">
+    <field name="name">cc.application.list</field>
+    <field name="model">cc.application</field>
+    <field name="arch" type="xml">
+      <list><field name="sequence"/><field name="code"/><field name="name"/><field name="active"/></list>
+    </field>
+  </record>
+  <record id="view_cc_application_form" model="ir.ui.view">
+    <field name="name">cc.application.form</field>
+    <field name="model">cc.application</field>
+    <field name="arch" type="xml">
+      <form><sheet><group><field name="code"/><field name="name"/><field name="sequence"/><field name="active"/><field name="description"/></group></sheet></form>
+    </field>
+  </record>
+  <record id="action_cc_applications" model="ir.actions.act_window">
+    <field name="name">Applications</field><field name="res_model">cc.application</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="view_cc_template_list" model="ir.ui.view">
+    <field name="name">cc.campaign.template.list</field>
+    <field name="model">cc.campaign.template</field>
+    <field name="arch" type="xml">
+      <list><field name="code"/><field name="name"/><field name="application_id"/><field name="current_version_id"/><field name="active"/></list>
+    </field>
+  </record>
+  <record id="view_cc_template_form" model="ir.ui.view">
+    <field name="name">cc.campaign.template.form</field>
+    <field name="model">cc.campaign.template</field>
+    <field name="arch" type="xml">
+      <form><sheet><group><field name="code"/><field name="name"/><field name="application_id"/><field name="active"/><field name="description"/></group><notebook><page string="Versions"><field name="version_ids"><list><field name="version"/><field name="state"/><field name="content_hash"/></list></field></page></notebook></sheet></form>
+    </field>
+  </record>
+  <record id="action_cc_templates" model="ir.actions.act_window">
+    <field name="name">Campaign Templates</field><field name="res_model">cc.campaign.template</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="view_cc_configuration_version_list" model="ir.ui.view">
+    <field name="name">cc.campaign.configuration.version.list</field>
+    <field name="model">cc.campaign.configuration.version</field>
+    <field name="arch" type="xml">
+      <list create="0" delete="0"><field name="campaign_id"/><field name="version"/><field name="state"/><field name="configuration_hash"/><field name="created_by"/><field name="create_date"/></list>
+    </field>
+  </record>
+  <record id="view_cc_configuration_version_form" model="ir.ui.view">
+    <field name="name">cc.campaign.configuration.version.form</field>
+    <field name="model">cc.campaign.configuration.version</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_publish" string="Publish" type="object" class="btn-primary" invisible="state != 'approved'" groups="codestra_cc_security.group_cc_global_administrator"/>
+          <field name="state" widget="statusbar"/>
+        </header>
+        <sheet>
+          <group>
+            <group><field name="campaign_id"/><field name="template_version_id"/><field name="version"/><field name="configuration_hash"/></group>
+            <group><field name="predecessor_id"/><field name="source_version_id"/><field name="design_revision_id"/><field name="created_by"/><field name="published_by"/><field name="published_at"/></group>
+          </group>
+          <notebook>
+            <page string="Configuration"><field name="configuration_json"/></page>
+            <page string="Validation"><field name="validation_errors_json"/></page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_cc_configuration_versions" model="ir.actions.act_window">
+    <field name="name">Campaign Configuration Versions</field><field name="res_model">cc.campaign.configuration.version</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="view_cc_provisioning_run_list" model="ir.ui.view">
+    <field name="name">cc.campaign.provisioning.run.list</field>
+    <field name="model">cc.campaign.provisioning.run</field>
+    <field name="arch" type="xml">
+      <list create="0" delete="0"><field name="requested_at"/><field name="campaign_id"/><field name="command"/><field name="operation"/><field name="requested_state"/><field name="configuration_version"/><field name="status"/><field name="delivery_state"/><field name="error_code"/></list>
+    </field>
+  </record>
+  <record id="view_cc_provisioning_run_form" model="ir.ui.view">
+    <field name="name">cc.campaign.provisioning.run.form</field>
+    <field name="model">cc.campaign.provisioning.run</field>
+    <field name="arch" type="xml">
+      <form create="0" edit="0" delete="0">
+        <header><field name="status" widget="statusbar"/></header>
+        <sheet>
+          <group>
+            <group><field name="campaign_id"/><field name="command"/><field name="operation"/><field name="requested_state"/><field name="configuration_version_id"/><field name="configuration_version"/><field name="run_uuid"/><field name="event_uuid"/></group>
+            <group><field name="idempotency_key"/><field name="correlation_id"/><field name="causation_id"/><field name="audit_reason"/><field name="requested_by"/><field name="requested_at"/><field name="completed_at"/></group>
+          </group>
+          <group string="Delivery (outbox intake only)">
+            <field name="delivery_state"/><field name="delivery_acknowledged_at"/>
+          </group>
+          <group string="Read-back">
+            <field name="readback_id"/><field name="error_code"/><field name="error_detail"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_cc_provisioning_runs" model="ir.actions.act_window">
+    <field name="name">Campaign Provisioning Runs</field><field name="res_model">cc.campaign.provisioning.run</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="view_cc_campaign_readback_list" model="ir.ui.view">
+    <field name="name">cc.campaign.readback.list</field>
+    <field name="model">cc.campaign.readback</field>
+    <field name="arch" type="xml">
+      <list create="0" edit="0" delete="0"><field name="received_at"/><field name="campaign_id"/><field name="operation"/><field name="effective_state"/><field name="configuration_version"/><field name="attempt"/><field name="outcome"/><field name="command_id"/></list>
+    </field>
+  </record>
+  <record id="view_cc_campaign_readback_form" model="ir.ui.view">
+    <field name="name">cc.campaign.readback.form</field>
+    <field name="model">cc.campaign.readback</field>
+    <field name="arch" type="xml">
+      <form create="0" edit="0" delete="0">
+        <sheet>
+          <group>
+            <group><field name="campaign_id"/><field name="run_id"/><field name="readback_uuid"/><field name="event_uuid"/><field name="command_id"/><field name="operation"/><field name="effective_state"/><field name="outcome"/></group>
+            <group><field name="configuration_version"/><field name="manifest_ref"/><field name="manifest_hash"/><field name="idempotency_key"/><field name="attempt"/><field name="observed_at"/><field name="received_at"/><field name="correlation_id"/><field name="causation_id"/></group>
+          </group>
+          <field name="evidence_json"/>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_cc_campaign_readbacks" model="ir.actions.act_window">
+    <field name="name">Campaign Read-back Receipts</field><field name="res_model">cc.campaign.readback</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="view_cc_campaign_form_control" model="ir.ui.view">
+    <field name="name">cc.campaign.form.control.lifecycle</field>
+    <field name="model">cc.campaign</field>
+    <field name="inherit_id" ref="codestra_cc_core.view_cc_campaign_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet/group" position="after">
+        <group string="Control Lifecycle">
+          <group>
+            <field name="control_status"/>
+            <field name="desired_state"/>
+            <field name="effective_state"/>
+            <field name="configuration_version"/>
+            <field name="configuration_version_id"/>
+          </group>
+          <group>
+            <field name="application_id"/>
+            <field name="template_id"/>
+            <field name="template_version_id"/>
+            <field name="control_blocked_reason_json"/>
+          </group>
+        </group>
+        <field name="provisioning_run_ids" readonly="1">
+          <list><field name="requested_at"/><field name="command"/><field name="operation"/><field name="requested_state"/><field name="configuration_version"/><field name="status"/><field name="delivery_state"/><field name="error_code"/></list>
+        </field>
+        <field name="readback_ids" readonly="1">
+          <list><field name="received_at"/><field name="operation"/><field name="effective_state"/><field name="configuration_version"/><field name="outcome"/></list>
+        </field>
+      </xpath>
+    </field>
+  </record>
+</odoo>

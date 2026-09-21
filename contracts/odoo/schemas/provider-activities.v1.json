@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "internal://odoo/provider-activities/v1",
+  "title": "Provider activity projection (Middleware -> Odoo)",
+  "description": "Odoo deduplicates on event_id (the provider event id) and returns the original message_id on replay.",
+  "$defs": {
+    "request": {
+      "type": "object",
+      "required": [
+        "operation",
+        "event_id",
+        "environment",
+        "organization_public_id",
+        "business_unit_public_id",
+        "campaign_public_id"
+      ],
+      "properties": {
+        "operation": {
+          "type": "string",
+          "enum": [
+            "log_call_result",
+            "log_inbound_sms"
+          ]
+        },
+        "event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "environment": {
+          "type": "string"
+        },
+        "organization_public_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "business_unit_public_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "campaign_public_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "phone_number": {
+          "type": "string"
+        },
+        "disposition": {
+          "type": "string"
+        },
+        "duration_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400
+        },
+        "provider_call_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "from_number": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "provider_message_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "received_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "operation": {
+              "const": "log_call_result"
+            }
+          },
+          "required": [
+            "phone_number",
+            "disposition",
+            "duration_seconds",
+            "provider_call_id"
+          ]
+        },
+        {
+          "properties": {
+            "operation": {
+              "const": "log_inbound_sms"
+            }
+          },
+          "required": [
+            "from_number",
+            "body",
+            "provider_message_id",
+            "received_at"
+          ]
+        }
+      ]
+    },
+    "response": {
+      "type": "object",
+      "required": [
+        "status",
+        "event_id",
+        "operation",
+        "correlation_id",
+        "message_id"
+      ],
+      "properties": {
+        "status": {
+          "const": "APPLIED"
+        },
+        "event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "operation": {
+          "type": "string"
+        },
+        "correlation_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "message_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    }
+  }
+}

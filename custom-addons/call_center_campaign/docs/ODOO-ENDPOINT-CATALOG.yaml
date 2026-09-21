@@ -4,97 +4,423 @@ api_version: v1
 base_url_key: odoo.internal
 production_activation: false
 
+# Middleware-facing operations. This section is generated from the shared
+# contract contracts/odoo/campaign-control.v1.json (Middleware owns the file;
+# Odoo vendors a byte-identical copy). Key, method, path and scope must equal
+# the contract; tests in codestra_campaign_control_plane enforce parity.
+shared_contract:
+  file: contracts/odoo/campaign-control.v1.json
+  canonical_sha256: 874711f3a8c38bfb2c69169d5f7c1717897d48419ce60bf5649a899f023e1e03
+  file_sha256: dbd0e8c8e3a33491c7618f56377a501c3aacdd0486fdd2e579f23a27533fa980
+  hash_rule: "sha256 over json.dumps(document, sort_keys=True, separators=(',', ':')).encode('utf-8')"
+  middleware_pin: Middleware- migrations/versions/0066_reconcile_odoo_campaign_scope.py CATALOG_SHA256
+  request_schemas:
+    internal://odoo/automation-results/v1: contracts/odoo/schemas/automation-results.v1.json
+    internal://odoo/provider-activities/v1: contracts/odoo/schemas/provider-activities.v1.json
+    internal://odoo/campaigns/actual-state/v1: contracts/odoo/schemas/campaigns-actual-state.v1.json
+    internal://odoo/campaigns/read/v1: contracts/odoo/schemas/campaigns-read.v1.json
+    internal://odoo/desired-state/read/v1: contracts/odoo/schemas/desired-state-read.v1.json
+  unserved_operations:
+    - key: reconciliation.runs.read
+      endpoint_key: odoo.reconciliation.runs.read
+      reason: "Odoo serves per-record reconciliation reads (codestra_telephony_bridge /reconciliation/runs/{run_public_id}); the contract collection path has no Odoo implementation."
+    - key: reconciliation.drifts.read
+      endpoint_key: odoo.reconciliation.drifts.read
+      reason: "Odoo serves per-record reconciliation reads (codestra_telephony_bridge /reconciliation/drifts/{drift_public_id}); the contract collection path has no Odoo implementation."
+    - key: sales.lookup
+      endpoint_key: odoo.sales.lookup
+      reason: "No Odoo addon implements the sales lookup projection."
+    - key: sales.verification.read
+      endpoint_key: odoo.sales.verification.read
+      reason: "No Odoo addon implements the sales verification projection."
+
 endpoints:
   - key: odoo.outbox.claim
+    operation: outbox.claim
     method: POST
     path: /api/v1/integration/outbox/claims
     scope: odoo.integration.outbox.claim
     mutation: true
+    served_by: call_center_campaign
   - key: odoo.outbox.read
+    operation: outbox.read
     method: GET
-    path: /api/v1/integration/outbox/{outbox_id}
+    path: /api/v1/integration/outbox/{event_id}
     scope: odoo.integration.outbox.read
     mutation: false
+    served_by: call_center_campaign
   - key: odoo.outbox.renew
+    operation: outbox.renew
     method: POST
-    path: /api/v1/integration/outbox/{outbox_id}/lease/renew
+    path: /api/v1/integration/outbox/{event_id}/renewals
     scope: odoo.integration.outbox.renew
     mutation: true
+    served_by: call_center_campaign
   - key: odoo.outbox.acknowledge
+    operation: outbox.acknowledge
     method: POST
-    path: /api/v1/integration/outbox/{outbox_id}/acknowledgements
+    path: /api/v1/integration/outbox/{event_id}/acknowledgements
     scope: odoo.integration.outbox.acknowledge
     mutation: true
+    served_by: call_center_campaign
   - key: odoo.outbox.fail
+    operation: outbox.fail
     method: POST
-    path: /api/v1/integration/outbox/{outbox_id}/failures
+    path: /api/v1/integration/outbox/{event_id}/failures
     scope: odoo.integration.outbox.fail
     mutation: true
+    served_by: call_center_campaign
   - key: odoo.outbox.release
+    operation: outbox.release
     method: POST
-    path: /api/v1/integration/outbox/{outbox_id}/release
+    path: /api/v1/integration/outbox/{event_id}/releases
     scope: odoo.integration.outbox.release
     mutation: true
+    served_by: call_center_campaign
   - key: odoo.results.create
+    operation: results.create
     method: POST
     path: /api/v1/integration/results
     scope: odoo.integration.results.write
     mutation: true
+    served_by: call_center_campaign
+    response_binding:
+      - persisted
+      - result_public_id
+      - correlation_id
+    receipt_field: result_inbox_id
   - key: odoo.results.read
+    operation: results.read
     method: GET
     path: /api/v1/integration/results/{result_public_id}
     scope: odoo.integration.results.read
     mutation: false
+    served_by: call_center_campaign
   - key: odoo.results.by_delivery
+    operation: results.by_delivery
     method: GET
-    path: /api/v1/integration/results?delivery_id={delivery_id}
+    path: /api/v1/integration/results/by-delivery/{delivery_public_id}
     scope: odoo.integration.results.read
     mutation: false
-  - key: odoo.results.reconcile
+    served_by: call_center_campaign
+  - key: odoo.automation_results.apply
+    operation: automation_results.apply
     method: POST
-    path: /api/v1/integration/results/{result_public_id}/reconcile
-    scope: odoo.integration.results.reconcile
+    path: /api/v1/integration/automation-results
+    scope: odoo.integration.automation_results.write
     mutation: true
-  - key: odoo.desired_state.read
-    method: GET
-    path: /api/v1/integration/desired-state/{aggregate_type}/{public_id}
-    scope: odoo.integration.desired_state.read
-    mutation: false
-  - key: odoo.agents.read
-    method: GET
-    path: /api/v1/integration/agents/{agent_public_id}
-    scope: odoo.integration.desired_state.read
-    mutation: false
-  - key: odoo.leads.read
-    method: GET
-    path: /api/v1/integration/leads/{lead_public_id}
-    scope: odoo.integration.desired_state.read
-    mutation: false
+    served_by: call_center_campaign
+    request_schema: internal://odoo/automation-results/v1
+    response_binding:
+      - status
+      - event_id
+      - execution_id
+      - correlation_id
+    receipt_field: receipt_id
+  - key: odoo.provider_activities.create
+    operation: provider_activities.create
+    method: POST
+    path: /api/v1/integration/provider-activities
+    scope: odoo.integration.provider_activities.write
+    mutation: true
+    served_by: call_center_campaign
+    request_schema: internal://odoo/provider-activities/v1
+    response_binding:
+      - status
+      - event_id
+      - operation
+      - correlation_id
+    receipt_field: message_id
+  - key: odoo.campaign.actual_state.write
+    operation: campaign.actual_state.write
+    method: POST
+    path: /api/v1/integration/campaigns/actual-state
+    scope: odoo.campaign.actual_state.write
+    mutation: true
+    served_by: codestra_campaign_control_plane
+    request_schema: internal://odoo/campaigns/actual-state/v1
+    response_binding:
+      - status
+      - event_uuid
+      - command_id
+      - configuration_version
+      - effective_state
+      - correlation_id
+    receipt_field: readback_id
+    conflict_status: 409
+    conflict_error_class: STALE_CONFIGURATION_VERSION
   - key: odoo.campaigns.read
-    method: GET
-    path: /api/v1/integration/campaigns/{campaign_public_id}
-    scope: odoo.integration.desired_state.read
+    operation: campaigns.read
+    method: POST
+    path: /api/v1/integration/campaigns/read
+    scope: odoo.campaign.control.read
     mutation: false
+    served_by: codestra_campaign_control_plane
+    request_schema: internal://odoo/campaigns/read/v1
+  - key: odoo.desired_state.read
+    operation: desired_state.read
+    method: POST
+    path: /api/v1/integration/desired-state/read
+    scope: odoo.campaign.control.read
+    mutation: false
+    served_by: codestra_campaign_control_plane
+    request_schema: internal://odoo/desired-state/read/v1
+    response_fields:
+      - campaign_public_id
+      - configuration_version
+      - desired_state
+      - manifest_ref
+      - manifest_hash
+  - key: odoo.agents.read
+    operation: agents.read
+    method: GET
+    path: /api/v1/integration/agents
+    scope: odoo.integration.read
+    mutation: false
+    served_by: call_center_campaign
+  - key: odoo.leads.read
+    operation: leads.read
+    method: GET
+    path: /api/v1/integration/leads
+    scope: odoo.integration.read
+    mutation: false
+    served_by: call_center_campaign
   - key: odoo.traces.read
+    operation: traces.read
     method: GET
-    path: /api/v1/integration/traces/{correlation_id}
-    scope: odoo.integration.traces.read
+    path: /api/v1/integration/traces/{trace_id}
+    scope: odoo.integration.read
     mutation: false
-  - key: odoo.traces.by_record
+    served_by: call_center_campaign
+  - key: odoo.telephony.projections.read
+    operation: telephony.projections.read
     method: GET
-    path: /api/v1/integration/traces?model={model}&res_id={id}
-    scope: odoo.integration.traces.read
+    path: /api/v1/integration/telephony/projections
+    scope: odoo.integration.read
     mutation: false
-  - key: odoo.audit.read
+    served_by: codestra_telephony_bridge
+  - key: odoo.telephony.mappings.read
+    operation: telephony.mappings.read
     method: GET
-    path: /api/v1/integration/audit/{audit_id}
-    scope: odoo.integration.audit.read
+    path: /api/v1/integration/telephony/mappings
+    scope: odoo.integration.read
     mutation: false
+    served_by: codestra_telephony_bridge
+  - key: odoo.observability.kpis.create
+    operation: observability.kpis.create
+    method: POST
+    path: /api/v1/integration/observability/kpis
+    scope: odoo.observability.kpis.write
+    mutation: true
+    served_by: codestra_observability_integration
+    response_binding:
+      - status
+      - event_id
+      - operation
+      - correlation_id
+    receipt_field: receipt_id
+  - key: odoo.observability.incidents.upsert
+    operation: observability.incidents.upsert
+    method: POST
+    path: /api/v1/integration/observability/incidents
+    scope: odoo.observability.incidents.write
+    mutation: true
+    served_by: codestra_observability_integration
+    response_binding:
+      - status
+      - event_id
+      - operation
+      - correlation_id
+    receipt_field: receipt_id
+  - key: odoo.observability.kpis.read
+    operation: observability.kpis.read
+    method: GET
+    path: /api/v1/integration/observability/kpis
+    scope: odoo.observability.read
+    mutation: false
+    served_by: codestra_observability_integration
+  - key: odoo.observability.incidents.read
+    operation: observability.incidents.read
+    method: GET
+    path: /api/v1/integration/observability/incidents
+    scope: odoo.observability.read
+    mutation: false
+    served_by: codestra_observability_integration
+  - key: odoo.observability.sync.read
+    operation: observability.sync.read
+    method: GET
+    path: /api/v1/integration/observability/sync-status
+    scope: odoo.observability.read
+    mutation: false
+    served_by: codestra_observability_integration
+
+# Administrative platform client only (odoo.campaign.control.write is never
+# issued to Middleware). These originate lifecycle commands; provider
+# execution still travels Odoo outbox -> Middleware claim -> read-back.
+platform_admin_endpoints:
+  - key: odoo.platform.campaigns.create
+    method: POST
+    path: /platform/v1/campaigns
+    scope: odoo.campaign.control.write
+    mutation: true
+    served_by: codestra_campaign_control_plane
+    required_fields:
+      - name
+      - code
+      - business_unit_code
+  - key: odoo.platform.campaigns.read
+    method: GET
+    path: /platform/v1/campaigns/{campaign_public_id}
+    scope: odoo.campaign.control.read
+    mutation: false
+    served_by: codestra_campaign_control_plane
+  - key: odoo.platform.campaigns.validate
+    method: POST
+    path: /platform/v1/campaigns/{campaign_public_id}/validate
+    scope: odoo.campaign.control.write
+    mutation: true
+    served_by: codestra_campaign_control_plane
+    required_fields:
+      - audit_reason
+      - expected_configuration_version
+  - key: odoo.platform.campaigns.provision
+    method: POST
+    path: /platform/v1/campaigns/{campaign_public_id}/provision
+    scope: odoo.campaign.control.write
+    mutation: true
+    served_by: codestra_campaign_control_plane
+    required_fields:
+      - audit_reason
+      - expected_configuration_version
+  - key: odoo.platform.campaigns.synthetic_test
+    method: POST
+    path: /platform/v1/campaigns/{campaign_public_id}/synthetic-test
+    scope: odoo.campaign.control.write
+    mutation: true
+    served_by: codestra_campaign_control_plane
+    required_fields:
+      - audit_reason
+      - expected_configuration_version
+  - key: odoo.platform.campaigns.activate
+    method: POST
+    path: /platform/v1/campaigns/{campaign_public_id}/activate
+    scope: odoo.campaign.control.write
+    mutation: true
+    served_by: codestra_campaign_control_plane
+    required_fields:
+      - audit_reason
+      - expected_configuration_version
+  - key: odoo.platform.campaigns.disable
+    method: POST
+    path: /platform/v1/campaigns/{campaign_public_id}/disable
+    scope: odoo.campaign.control.write
+    mutation: true
+    served_by: codestra_campaign_control_plane
+    required_fields:
+      - audit_reason
+      - expected_configuration_version
+  - key: odoo.platform.campaigns.reconcile
+    method: POST
+    path: /platform/v1/campaigns/{campaign_public_id}/reconcile
+    scope: odoo.campaign.control.write
+    mutation: true
+    served_by: codestra_campaign_control_plane
+    required_fields:
+      - audit_reason
+      - expected_configuration_version
+  - key: odoo.platform.campaigns.rollback
+    method: POST
+    path: /platform/v1/campaigns/{campaign_public_id}/rollback
+    scope: odoo.campaign.control.write
+    mutation: true
+    served_by: codestra_campaign_control_plane
+    required_fields:
+      - audit_reason
+      - expected_configuration_version
+      - target_configuration_version
+  - key: odoo.platform.campaigns.actual_state.read
+    method: GET
+    path: /platform/v1/campaigns/{campaign_public_id}/actual-state
+    scope: odoo.campaign.control.read
+    mutation: false
+    served_by: codestra_campaign_control_plane
+  - key: odoo.platform.campaigns.provisioning_runs.read
+    method: GET
+    path: /platform/v1/campaigns/{campaign_public_id}/provisioning-runs
+    scope: odoo.campaign.control.read
+    mutation: false
+    served_by: codestra_campaign_control_plane
+
+# Odoo-only routes outside the shared contract. Middleware calls the
+# capabilities document at its fixed path; the rest are operator, audit and
+# compatibility reads and are not registry-routed operations.
+odoo_only_endpoints:
   - key: odoo.capabilities.read
     method: GET
     path: /api/v1/integration/capabilities
     scope: service.attest
     mutation: false
+    served_by: call_center_campaign
+  - key: odoo.results.reconcile
+    method: POST
+    path: /api/v1/integration/results/{result_public_id}/reconcile
+    scope: odoo.integration.results.reconcile
+    mutation: true
+    served_by: call_center_campaign
+  - key: odoo.traces.by_record
+    method: GET
+    path: /api/v1/integration/traces?model={model}&res_id={id}
+    scope: odoo.integration.read
+    mutation: false
+    served_by: call_center_campaign
+  - key: odoo.audit.read
+    method: GET
+    path: /api/v1/integration/audit/{audit_id}
+    scope: odoo.integration.audit.read
+    mutation: false
+    served_by: call_center_campaign
+  - key: odoo.desired_state.aggregate.read
+    method: GET
+    path: /api/v1/integration/desired-state/{aggregate_type}/{public_id}
+    scope: odoo.integration.read
+    mutation: false
+    served_by: call_center_campaign
+  - key: odoo.agents.read.by_path
+    method: GET
+    path: /api/v1/integration/agents/{agent_public_id}
+    scope: odoo.integration.read
+    mutation: false
+    served_by: call_center_campaign
+  - key: odoo.leads.read.by_path
+    method: GET
+    path: /api/v1/integration/leads/{lead_public_id}
+    scope: odoo.integration.read
+    mutation: false
+    served_by: call_center_campaign
+  - key: odoo.campaigns.legacy.read
+    method: GET
+    path: /api/v1/integration/campaigns/{campaign_public_id}
+    scope: odoo.integration.read
+    mutation: false
+    served_by: call_center_campaign
+  - key: odoo.outbox.renew.legacy_path
+    method: POST
+    path: /api/v1/integration/outbox/{event_id}/lease/renew
+    scope: odoo.integration.outbox.renew
+    mutation: true
+    served_by: call_center_campaign
+  - key: odoo.outbox.release.legacy_path
+    method: POST
+    path: /api/v1/integration/outbox/{event_id}/release
+    scope: odoo.integration.outbox.release
+    mutation: true
+    served_by: call_center_campaign
+  - key: odoo.results.by_delivery.query
+    method: GET
+    path: /api/v1/integration/results?delivery_id={delivery_id}
+    scope: odoo.integration.results.read
+    mutation: false
+    served_by: call_center_campaign
 
 operations:
   - key: odoo.health.live
@@ -114,9 +440,88 @@ operations:
     path: /metrics
     scope: metrics.read
 
+campaign_control:
+  delivery: middleware_pull
+  outbox_command_id: event_uuid
+  outbox_event_allowlist:
+    - campaign.provision.requested.v1
+    - campaign.synthetic_test.requested.v1
+    - campaign.activate.requested.v1
+    - campaign.disable.requested.v1
+    - campaign.reconcile.requested.v1
+  outbox_payload_required_fields:
+    - command_id
+    - organization_public_id
+    - business_unit_public_id
+    - campaign_public_id
+    - configuration_version
+    - manifest_ref
+    - manifest_hash
+  effective_states:
+    - unknown
+    - absent
+    - provisioned_disabled
+    - synthetic_tested
+    - active
+    - disabled
+  control_statuses:
+    - draft
+    - validated
+    - blocked
+  run_statuses:
+    - pending
+    - succeeded
+    - failed
+  run_delivery_states:
+    - none
+    - queued
+    - accepted
+    - dead_letter
+  concurrency_field: expected_configuration_version
+  readback_required_fields:
+    - event_uuid
+    - command_id
+    - idempotency_key
+    - attempt
+    - organization_public_id
+    - business_unit_public_id
+    - campaign_public_id
+    - configuration_version
+    - operation
+    - effective_state
+    - manifest_ref
+    - manifest_hash
+    - evidence
+    - observed_at
+    - correlation_id
+    - causation_id
+  conflict_codes:
+    - STALE_CONFIGURATION_VERSION
+    - IDEMPOTENCY_CONFLICT
+    - CONFIGURATION_VERSION_CONFLICT
+    - INVALID_STATE_TRANSITION
+    - PROVISIONING_RUN_PENDING
+    - IDEMPOTENCY_KEY_REUSED
+    - EXTERNAL_EFFECTS_DISABLED
+    - CONFIGURATION_NOT_VALIDATED
+    - ROLLBACK_TARGET_IS_CURRENT
+    - ROLLBACK_TARGET_BLOCKED
+  scopes:
+    - odoo.campaign.control.read
+    - odoo.campaign.actual_state.write
+    - odoo.campaign.control.write
+  middleware_scopes:
+    - odoo.campaign.control.read
+    - odoo.campaign.actual_state.write
+
 webhook_boundary:
   provider_webhooks_accepted: false
   normalized_result_ingress: odoo.results.create
   retired_routes:
     - path: /codestra/integration/v1/results
       response_status: 410
+    - path: /api/v1/integration/campaign-actions
+      operation: campaign_actions.apply
+      response_status: 410
+      replaced_by: automation_results.apply
+      advertised: false

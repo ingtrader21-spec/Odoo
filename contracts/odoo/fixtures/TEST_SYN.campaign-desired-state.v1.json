@@ -1,0 +1,24 @@
+{
+  "schema": "codestra.odoo.test-syn-campaign-desired-state.v1",
+  "purpose": "Repository-only fixture for source, local, and staging certification. It is not loaded by an Odoo manifest.",
+  "campaign": {
+    "organization_public_id": "TEST_SYN_TENANT",
+    "business_unit_public_id": "TEST_SYN",
+    "campaign_public_id": "TEST_SYN",
+    "name": "Synthetic Integration Certification",
+    "environment": "staging",
+    "active": false
+  },
+  "desired_state": {
+    "campaign_public_id": "TEST_SYN",
+    "configuration_version": 1,
+    "desired_state": "provisioned_disabled",
+    "manifest_ref": "fixture://TEST_SYN/campaign-configuration.v1",
+    "manifest_hash": "5b286ac7a90c3145959ea87cfc12be62abe364155bb80fccdb52d71cccf3d0b7"
+  },
+  "safety": {
+    "production_writes_enabled": false,
+    "provider_effects_enabled": false,
+    "design_automation_enabled": false
+  }
+}

@@ -1,0 +1,35 @@
+<odoo>
+  <record id="rule_cc_profile_field_value_scope" model="ir.rule">
+    <field name="name">Profile field values follow campaign scope</field>
+    <field name="model_id" ref="model_cc_profile_field_value"/>
+    <field name="domain_force">[('campaign_id','in',user.cc_allowed_campaign_ids.ids)]</field>
+  </record>
+  <record id="rule_cc_workspace_section_scope" model="ir.rule">
+    <field name="name">Workspace sections follow campaign scope</field>
+    <field name="model_id" ref="model_cc_workspace_section"/>
+    <field name="domain_force">[('campaign_id','in',user.cc_allowed_campaign_ids.ids)]</field>
+  </record>
+  <record id="rule_cc_workspace_item_scope" model="ir.rule">
+    <field name="name">Workspace items follow campaign scope</field>
+    <field name="model_id" ref="model_cc_workspace_item"/>
+    <field name="domain_force">[('campaign_id','in',user.cc_allowed_campaign_ids.ids)]</field>
+  </record>
+  <record id="rule_cc_configuration_version_scope" model="ir.rule">
+    <field name="name">Configuration versions follow campaign scope</field>
+    <field name="model_id" ref="model_cc_campaign_configuration_version"/>
+    <field name="groups" eval="[(4, ref('codestra_cc_security.group_cc_scoped_user'))]"/>
+    <field name="domain_force">[('campaign_id','in',user.cc_allowed_campaign_ids.ids)]</field>
+  </record>
+  <record id="rule_cc_provisioning_run_scope" model="ir.rule">
+    <field name="name">Provisioning runs follow campaign scope</field>
+    <field name="model_id" ref="model_cc_campaign_provisioning_run"/>
+    <field name="groups" eval="[(4, ref('codestra_cc_security.group_cc_scoped_user'))]"/>
+    <field name="domain_force">[('campaign_id','in',user.cc_allowed_campaign_ids.ids)]</field>
+  </record>
+  <record id="rule_cc_campaign_readback_scope" model="ir.rule">
+    <field name="name">Read-back receipts follow campaign scope</field>
+    <field name="model_id" ref="model_cc_campaign_readback"/>
+    <field name="groups" eval="[(4, ref('codestra_cc_security.group_cc_scoped_user'))]"/>
+    <field name="domain_force">[('campaign_id','in',user.cc_allowed_campaign_ids.ids)]</field>
+  </record>
+</odoo>

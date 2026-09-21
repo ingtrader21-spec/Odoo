@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
+  <!-- NOT LOADED: this file is deliberately absent from __manifest__.py.
+       The design-request preview push (campaign.design.requested.v1) is the
+       only Odoo-originated HTTP delivery that exists, and it stays disabled
+       until separately approved. Campaign-control commands are never pushed:
+       Middleware pulls them through /api/v1/integration/outbox/claims.
+       Loading this file requires an explicit reviewed change; even then the
+       cron ships inactive. -->
   <record id="ir_cron_deliver_campaign_design_outbox" model="ir.cron">
-    <field name="name">Deliver Campaign Design Outbox</field>
+    <field name="name">Deliver Campaign Design Outbox (disabled)</field>
     <field name="model_id" ref="model_codestra_runtime_integration_outbox"/>
     <field name="state">code</field>
     <field name="code">model._cron_deliver_campaign_design_events()</field>
     <field name="interval_number">1</field>
     <field name="interval_type">minutes</field>
     <field name="active">False</field>
-  </record>
-  <record id="ir_cron_purge_integration_nonces" model="ir.cron">
-    <field name="name">Purge Expired Integration Nonces</field>
-    <field name="model_id" ref="model_codestra_integration_callback_nonce"/>
-    <field name="state">code</field>
-    <field name="code">model._cron_purge_expired()</field>
-    <field name="interval_number">5</field>
-    <field name="interval_type">minutes</field>
-    <field name="active">True</field>
   </record>
 </odoo>

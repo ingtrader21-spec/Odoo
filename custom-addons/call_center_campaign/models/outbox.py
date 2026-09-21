@@ -133,8 +133,12 @@ class CodestraIntegrationOutbox(models.Model):
         "unique(record_environment, idempotency_key)",
         "Outbox idempotency keys must be unique within an environment.",
     )
-    _design_revision_unique = models.Constraint(
-        "unique(event_type, integration_uuid, design_request_revision)",
+    # Only design requests are once-per-revision. Other producers (campaign
+    # control commands) never populate design_request_revision and identify
+    # themselves by a globally unique event_uuid instead.
+    _design_revision_once = models.UniqueIndex(
+        "(event_type, integration_uuid, design_request_revision)"
+        f" WHERE event_type = '{EVENT_TYPE}'",
         "A campaign design revision may only be requested once.",
     )
     _payload_hash_format = models.Constraint(
@@ -710,12 +714,22 @@ class CodestraIntegrationOutbox(models.Model):
         )
         if terminal:
             self._worker_write({"delivery_state": "dead_letter"})
-            campaign = self._lock_campaign_for_finalization()
-            if campaign.design_request_revision == self.design_request_revision:
-                campaign._write_integration_state(
-                    {"design_request_state": "dead_letter"}
-                )
+            if self.event_type == EVENT_TYPE:
+                campaign = self._lock_campaign_for_finalization()
+                if campaign.design_request_revision == self.design_request_revision:
+                    campaign._write_integration_state(
+                        {"design_request_state": "dead_letter"}
+                    )
+            self._on_dead_letter()
         return terminal
+
+    def _on_acknowledged(self):
+        """Hook: Middleware acknowledged delivery (never a business outcome)."""
+        self.ensure_one()
+
+    def _on_dead_letter(self):
+        """Hook for producers that track delivery of their own event types."""
+        self.ensure_one()
 
     @api.model
     def _cron_deliver_campaign_design_events(self):
@@ -799,8 +813,18 @@ class CallCenterCampaignOutboxProducer(models.Model):
             "middleware_design_revision",
             "provisioning_state",
         }
+        # A caller may never set integration state. The cc.campaign _inherits
+        # delegation injects the parent's own defaults when it creates this
+        # record, so only a value that differs from the field default is a
+        # claim.
+        defaults = self.default_get(sorted(protected))
         for vals in vals_list:
-            if protected & vals.keys():
+            claimed = {
+                name
+                for name in protected & vals.keys()
+                if vals[name] != defaults.get(name)
+            }
+            if claimed:
                 raise AccessError("Campaign integration state is system controlled.")
             if vals.get("design_automation_enabled"):
                 vals["integration_uuid"] = str(uuid.uuid4())

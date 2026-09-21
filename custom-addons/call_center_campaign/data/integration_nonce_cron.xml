@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+  <!-- Replay-guard hygiene only: expired nonces are purged so the unique
+       (service_id, nonce) table stays bounded. No integration delivery. -->
+  <record id="ir_cron_purge_integration_nonces" model="ir.cron">
+    <field name="name">Purge Expired Integration Nonces</field>
+    <field name="model_id" ref="model_codestra_integration_callback_nonce"/>
+    <field name="state">code</field>
+    <field name="code">model._cron_purge_expired()</field>
+    <field name="interval_number">5</field>
+    <field name="interval_type">minutes</field>
+    <field name="active">True</field>
+  </record>
+</odoo>

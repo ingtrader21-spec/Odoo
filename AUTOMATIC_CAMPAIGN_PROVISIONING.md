@@ -372,25 +372,23 @@ Implement equivalent records for:
 
 ## Events
 
-Use versioned events:
+Use versioned events. The Odoo transactional outbox emits exactly the
+campaign-control allowlist of the shared contract
+(`contracts/odoo/campaign-control.v1.json`); anything else is Middleware- or
+provider-side vocabulary and is never written by Odoo:
 
 ```text
-campaign.design.requested.v1
-campaign.design.generated.v1
-campaign.approved.v1
 campaign.provision.requested.v1
-campaign.provision.started.v1
-campaign.resource.applied.v1
-campaign.readback.completed.v1
-campaign.provision.completed.v1
-campaign.provision.blocked.v1
-campaign.test.completed.v1
-campaign.activation.requested.v1
-campaign.activated.v1
-campaign.rollback.requested.v1
-campaign.rolled_back.v1
-campaign.drift.detected.v1
+campaign.synthetic_test.requested.v1
+campaign.activate.requested.v1
+campaign.disable.requested.v1
+campaign.reconcile.requested.v1
 ```
+
+Rollback does not have its own event: it creates a new immutable
+configuration version and enqueues `campaign.reconcile.requested.v1`. The
+design-preview automation keeps its separate `campaign.design.requested.v1`
+outbox event.
 
 ## Required APIs
 
@@ -401,15 +399,52 @@ POST /api/v1/campaign-designs/preview
 GET  /api/v1/campaign-designs/{integration_uuid}
 POST /api/v1/campaign-designs/{integration_uuid}/approve
 
-POST /api/v1/campaigns/{integration_uuid}/provision
-GET  /api/v1/campaigns/{integration_uuid}/provisioning-runs
-GET  /api/v1/campaigns/{integration_uuid}/actual-state
-POST /api/v1/campaigns/{integration_uuid}/test
-POST /api/v1/campaigns/{integration_uuid}/activate
-POST /api/v1/campaigns/{integration_uuid}/disable
-POST /api/v1/campaigns/{integration_uuid}/rollback
-POST /api/v1/campaigns/{integration_uuid}/reconcile
+POST /platform/v1/campaigns
+GET  /platform/v1/campaigns/{campaign_public_id}
+POST /platform/v1/campaigns/{campaign_public_id}/validate
+POST /platform/v1/campaigns/{campaign_public_id}/provision
+POST /platform/v1/campaigns/{campaign_public_id}/synthetic-test
+POST /platform/v1/campaigns/{campaign_public_id}/activate
+POST /platform/v1/campaigns/{campaign_public_id}/disable
+POST /platform/v1/campaigns/{campaign_public_id}/reconcile
+POST /platform/v1/campaigns/{campaign_public_id}/rollback
+GET  /platform/v1/campaigns/{campaign_public_id}/actual-state
+GET  /platform/v1/campaigns/{campaign_public_id}/provisioning-runs
+
+POST /api/v1/integration/campaigns/actual-state   (Middleware read-back)
+POST /api/v1/integration/campaigns/read           (Middleware read)
+POST /api/v1/integration/desired-state/read       (Middleware read)
 ```
+
+`/platform/v1/campaigns*` is the administrative platform client API
+(`odoo.campaign.control.write`), served by `codestra_campaign_control_plane`
+on the canonical `cc.campaign` record. The three `/api/v1/integration/...`
+routes are the Middleware-facing operations pinned by the shared contract
+`contracts/odoo/campaign-control.v1.json` (`campaign.actual_state.write`,
+`campaigns.read`, `desired_state.read`; scopes
+`odoo.campaign.actual_state.write` and `odoo.campaign.control.read`).
+Middleware never holds `odoo.campaign.control.write`.
+`POST /api/v1/integration/campaign-actions` is retired and answers `410 Gone`.
+
+Every command carries `Idempotency-Key`, `audit_reason`, and
+`expected_configuration_version` (the current
+`cc.campaign.configuration.version` number, `0` before the first validation).
+A mismatch returns `409 CONFIGURATION_VERSION_CONFLICT`; a retry with the same
+`Idempotency-Key` returns the original run and reuses its `command_id` (the
+outbox `event_uuid`). Queued commands update `desired_state` (contract enum:
+`unknown`, `absent`, `provisioned_disabled`, `synthetic_tested`, `active`,
+`disabled`), leave `effective_state` unchanged, and create one
+`cc.campaign.provisioning.run` plus one outbox event
+(`campaign.provision|synthetic_test|activate|disable|reconcile.requested.v1`)
+that Middleware pulls through `/api/v1/integration/outbox/*`. Rollback creates
+a new immutable configuration version and enqueues `reconcile`. Acknowledging
+the outbox event records intake only (`delivery_state = accepted`); only the
+authenticated `campaign.actual_state.write` read-back (16 required fields,
+`Idempotency-Key` equal to the body key) completes the run and moves
+`effective_state`. A read-back equal to the previous effective state is
+execution lag, not drift; a stale or future `configuration_version` returns
+`409 STALE_CONFIGURATION_VERSION` without mutation; a duplicate read-back
+returns the original `readback_id`.
 
 All state-changing endpoints require:
 
