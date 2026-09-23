@@ -224,6 +224,21 @@ class TestMiddlewareCrmCustomerRecordsHttp(HttpCase):
         self.assertEqual(complete.status_code, 200, complete.text)
         self.assertEqual(complete.json()["status"], "completed")
 
+
+    def test_update_task_returns_parent_profile_for_deterministic_readback(self):
+        create = self._signed("POST", f"/codestra/middleware/v1/customer-profiles/{self.profile.id}/tasks", {
+            "summary": "Original task", "activity_type": "todo",
+        })
+        self.assertEqual(create.status_code, 201, create.text)
+        task_id = create.json()["task_id"]
+        update = self._signed("PATCH", f"/codestra/middleware/v1/tasks/{task_id}", {
+            "summary": "Updated task",
+        })
+        self.assertEqual(update.status_code, 200, update.text)
+        self.assertEqual(update.json()["task_id"], task_id)
+        self.assertEqual(update.json()["profile_id"], self.profile.id)
+        self.assertEqual(update.json()["summary"], "Updated task")
+
     # -- tickets --
 
     def test_create_and_read_ticket(self):
