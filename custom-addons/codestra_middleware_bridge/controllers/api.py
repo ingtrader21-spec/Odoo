@@ -1251,7 +1251,7 @@ class CodestraMiddlewareBridge(http.Controller):
         unsupported = sorted(set(payload) - allowed)
         if unsupported: return self._json(422, {"error": "unsupported_fields", "fields": unsupported})
         activity.write(values)
-        return self._complete(auth, "task.update", {"task_id": activity.id, "summary": activity.summary}, profile.partner_id)
+        return self._complete(auth, "task.update", {"task_id": activity.id, "profile_id": profile.id, "summary": activity.summary}, profile.partner_id)
 
     @http.route("/codestra/middleware/v1/tasks/<int:task_id>/complete", type="http", auth="none", methods=["POST"], csrf=False, readonly=False)
     def task_complete(self, task_id):
