@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "service_id": "business-system",
+  "repository": "ingtrader21-spec/Odoo",
+  "component_class": "application",
+  "standalone": true,
+  "cross_system_integration_authority": "ingtrader21-spec/Middleware-",
+  "canonical_cross_system_path": "Caddy -> Kong -> Middleware V3 :8095 -> service API/control surface",
+  "direct_cross_app_calls_allowed": false,
+  "shared_business_database_allowed": false,
+  "secrets_authority": "OpenBao references only",
+  "identity_authority": "Keycloak/workload identity",
+  "environment_branches": {
+    "development": "development",
+    "test": "testing",
+    "staging": "staging",
+    "production": "production"
+  },
+  "api_policy": {
+    "owns_own_contract": true,
+    "versioned_contracts": true,
+    "health_readiness_metrics_required_where_runtime_exposes_http": true,
+    "openapi_or_machine_readable_contract_required": true,
+    "internal_and_metrics_not_public": true
+  },
+  "multi_tenant_and_user_design": {
+    "tenant_claim_required_when_user_or_tenant_scoped": true,
+    "roles_and_permissions_externalized_to_identity_policy": true,
+    "service_to_service_uses_workload_identity": true,
+    "no_trust_from_client_supplied_role_headers": true
+  },
+  "production_safety": {
+    "default_deny_effects": true,
+    "idempotency_required_for_effectful_commands": true,
+    "readback_or_reconciliation_required_for_ambiguous_effects": true,
+    "promotion_requires_green_testing_and_staging_evidence": true
+  }
+}
