@@ -1,5 +1,5 @@
-git diff --check                                                       exit=0 :: 
-python -I -m compileall -q custom-addons scripts tests/security        exit=0 :: 
+git diff --check                                                       exit=0 ::
+python -I -m compileall -q custom-addons scripts tests/security        exit=0 ::
 python -I scripts/validate_calling_contract_pin.py                     exit=0 :: CALLING_CONTRACT_PIN=PASS
 python -I scripts/generate_calling_client_schema.py --check            exit=0 :: CALLING_CLIENT_SCHEMA=PASS
 python -I scripts/validate_calling_contract_usage.py                   exit=0 :: CALLING_CONTRACT_USAGE=PASS
@@ -9,7 +9,7 @@ python -I scripts/validate_manifests.py                                exit=0 ::
 python -I scripts/validate_asset_integrity.py                          exit=0 :: REPOSITORY_BROWSER_ASSET_INTEGRITY=PASS
 node --experimental-vm-modules --test tests/frontend/test_call_popup_rpc.mjs exit=0 :: ℹ duration_ms 220.1401
 node --experimental-vm-modules --test tests/frontend/test_call_popup_handle_call.mjs exit=0 :: ℹ duration_ms 172.3713
-python -I scripts/validate_integration_boundary.py                     exit=0 :: Odoo integration-boundary validation passed: only Codestra Middleware may write through approved service APIs 
+python -I scripts/validate_integration_boundary.py                     exit=0 :: Odoo integration-boundary validation passed: only Codestra Middleware may write through approved service APIs
 python -I scripts/validate_mission1_foundation.py                      exit=0 :: ODOO_MISSION1_FOUNDATION=PASS
 python -I scripts/validate_platform_control_plane.py                   exit=0 :: PLATFORM_CONTROL_PLANE=PASS
 python -I scripts/validate_observability_control_plane.py              exit=0 :: OBSERVABILITY_CONTROL_PLANE=PASS
