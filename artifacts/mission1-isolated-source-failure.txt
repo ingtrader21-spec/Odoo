@@ -1,0 +1,408 @@
+..................................................EEEE.........................................................................................................................................EEEE.E.E..E..EEEEEEEEEEE.EEEEEEEE
+======================================================================
+ERROR: test_imports_exact_export_and_keeps_delivery_disabled (_codestra_klyrow_smtp_provision_source_tests.ProvisionScriptTest.test_imports_exact_export_and_keeps_delivery_disabled)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\tests\test_provision_klyrow_smtp_script.py", line 98, in test_imports_exact_export_and_keeps_delivery_disabled
+    env = self.run_script(self.credential())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\tests\test_provision_klyrow_smtp_script.py", line 75, in run_script
+    runpy.run_path(str(SCRIPT), init_globals={"env": env})
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\scripts\provision_klyrow_smtp.py", line 87, in <module>
+    secrets = _parse_protected_env(SECRET_PATH)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\scripts\provision_klyrow_smtp.py", line 47, in _parse_protected_env
+    if metadata.st_uid not in {0, os.geteuid()}:
+                                  ^^^^^^^^^^
+AttributeError: module 'os' has no attribute 'geteuid'. Did you mean: 'getpid'?
+
+======================================================================
+ERROR: test_rejects_incomplete_export (_codestra_klyrow_smtp_provision_source_tests.ProvisionScriptTest.test_rejects_incomplete_export)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\tests\test_provision_klyrow_smtp_script.py", line 116, in test_rejects_incomplete_export
+    self.run_script(self.credential()[:-1])
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\tests\test_provision_klyrow_smtp_script.py", line 75, in run_script
+    runpy.run_path(str(SCRIPT), init_globals={"env": env})
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\scripts\provision_klyrow_smtp.py", line 87, in <module>
+    secrets = _parse_protected_env(SECRET_PATH)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\scripts\provision_klyrow_smtp.py", line 47, in _parse_protected_env
+    if metadata.st_uid not in {0, os.geteuid()}:
+                                  ^^^^^^^^^^
+AttributeError: module 'os' has no attribute 'geteuid'. Did you mean: 'getpid'?
+
+======================================================================
+ERROR: test_rejects_unrelated_key (_codestra_klyrow_smtp_provision_source_tests.ProvisionScriptTest.test_rejects_unrelated_key)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\tests\test_provision_klyrow_smtp_script.py", line 112, in test_rejects_unrelated_key
+    self.run_script(self.credential() + [("EXTRA", "value")])
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\tests\test_provision_klyrow_smtp_script.py", line 75, in run_script
+    runpy.run_path(str(SCRIPT), init_globals={"env": env})
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\scripts\provision_klyrow_smtp.py", line 87, in <module>
+    secrets = _parse_protected_env(SECRET_PATH)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\scripts\provision_klyrow_smtp.py", line 47, in _parse_protected_env
+    if metadata.st_uid not in {0, os.geteuid()}:
+                                  ^^^^^^^^^^
+AttributeError: module 'os' has no attribute 'geteuid'. Did you mean: 'getpid'?
+
+======================================================================
+ERROR: test_rejects_wrong_transport_binding (_codestra_klyrow_smtp_provision_source_tests.ProvisionScriptTest.test_rejects_wrong_transport_binding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\tests\test_provision_klyrow_smtp_script.py", line 108, in test_rejects_wrong_transport_binding
+    self.run_script(records)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\tests\test_provision_klyrow_smtp_script.py", line 75, in run_script
+    runpy.run_path(str(SCRIPT), init_globals={"env": env})
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\scripts\provision_klyrow_smtp.py", line 87, in <module>
+    secrets = _parse_protected_env(SECRET_PATH)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\custom-addons\codestra_klyrow_smtp\scripts\provision_klyrow_smtp.py", line 47, in _parse_protected_env
+    if metadata.st_uid not in {0, os.geteuid()}:
+                                  ^^^^^^^^^^
+AttributeError: module 'os' has no attribute 'geteuid'. Did you mean: 'getpid'?
+
+======================================================================
+ERROR: test_absolute_in_checkout_symlink_is_not_relocation_safe (test_upstream_sync.UpstreamSyncTests.test_absolute_in_checkout_symlink_is_not_relocation_safe)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 582, in test_absolute_in_checkout_symlink_is_not_relocation_safe
+    (source / "absolute-link").symlink_to(shared)
+  File "C:\Users\agent\AppData\Local\Programs\Python\Python312\Lib\pathlib.py", line 1386, in symlink_to
+    os.symlink(target, self, target_is_directory)
+OSError: [WinError 1314] A required privilege is not held by the client: 'C:\\Users\\agent\\AppData\\Local\\Temp\\tmppph3ufim\\source\\shared\\value.txt' -> 'C:\\Users\\agent\\AppData\\Local\\Temp\\tmppph3ufim\\source\\absolute-link'
+
+======================================================================
+ERROR: test_complete_snapshot_overlay_and_runtime_promotion (test_upstream_sync.UpstreamSyncTests.test_complete_snapshot_overlay_and_runtime_promotion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 181, in test_complete_snapshot_overlay_and_runtime_promotion
+    state = sync.synchronize(
+            ^^^^^^^^^^^^^^^^^
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_destination_symlink_ancestor_is_rejected_before_overlay (test_upstream_sync.UpstreamSyncTests.test_destination_symlink_ancestor_is_rejected_before_overlay)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 852, in test_destination_symlink_ancestor_is_rejected_before_overlay
+    (destination / "alias").symlink_to("scripts", target_is_directory=True)
+  File "C:\Users\agent\AppData\Local\Programs\Python\Python312\Lib\pathlib.py", line 1386, in symlink_to
+    os.symlink(target, self, target_is_directory)
+OSError: [WinError 1314] A required privilege is not held by the client: 'scripts' -> 'C:\\Users\\agent\\AppData\\Local\\Temp\\tmp6xyhenn1\\destination\\alias'
+
+======================================================================
+ERROR: test_directory_replacement_rejects_unmanaged_descendants (test_upstream_sync.UpstreamSyncTests.test_directory_replacement_rejects_unmanaged_descendants)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 789, in test_directory_replacement_rejects_unmanaged_descendants
+    sync.synchronize(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_file_and_directory_transitions_are_supported (test_upstream_sync.UpstreamSyncTests.test_file_and_directory_transitions_are_supported)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 361, in test_file_and_directory_transitions_are_supported
+    sync.synchronize(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_later_sync_deletes_only_previously_managed_modules (test_upstream_sync.UpstreamSyncTests.test_later_sync_deletes_only_previously_managed_modules)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 481, in test_later_sync_deletes_only_previously_managed_modules
+    sync.synchronize(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_nested_directory_replacement_recreates_removed_ancestor (test_upstream_sync.UpstreamSyncTests.test_nested_directory_replacement_recreates_removed_ancestor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 444, in test_nested_directory_replacement_recreates_removed_ancestor
+    sync.synchronize(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_preserved_child_cannot_be_replaced_by_upstream_ancestor_symlink (test_upstream_sync.UpstreamSyncTests.test_preserved_child_cannot_be_replaced_by_upstream_ancestor_symlink)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 948, in test_preserved_child_cannot_be_replaced_by_upstream_ancestor_symlink
+    (source / "tests").symlink_to("payload", target_is_directory=True)
+  File "C:\Users\agent\AppData\Local\Programs\Python\Python312\Lib\pathlib.py", line 1386, in symlink_to
+    os.symlink(target, self, target_is_directory)
+OSError: [WinError 1314] A required privilege is not held by the client: 'payload' -> 'C:\\Users\\agent\\AppData\\Local\\Temp\\tmpr5qdfu3i\\source\\tests'
+
+======================================================================
+ERROR: test_repository_escaping_or_excluded_symlink_fails_closed (test_upstream_sync.UpstreamSyncTests.test_repository_escaping_or_excluded_symlink_fails_closed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 560, in test_repository_escaping_or_excluded_symlink_fails_closed
+    (source / "escape").symlink_to(Path("../outside.txt"))
+  File "C:\Users\agent\AppData\Local\Programs\Python\Python312\Lib\pathlib.py", line 1386, in symlink_to
+    os.symlink(target, self, target_is_directory)
+OSError: [WinError 1314] A required privilege is not held by the client: '..\\outside.txt' -> 'C:\\Users\\agent\\AppData\\Local\\Temp\\tmp532swo5k\\source\\escape'
+
+======================================================================
+ERROR: test_runtime_root_symlink_is_rejected (test_upstream_sync.UpstreamSyncTests.test_runtime_root_symlink_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 975, in test_runtime_root_symlink_is_rejected
+    (source / "custom-addons").symlink_to("addons", target_is_directory=True)
+  File "C:\Users\agent\AppData\Local\Programs\Python\Python312\Lib\pathlib.py", line 1386, in symlink_to
+    os.symlink(target, self, target_is_directory)
+OSError: [WinError 1314] A required privilege is not held by the client: 'addons' -> 'C:\\Users\\agent\\AppData\\Local\\Temp\\tmp3mqukd9j\\source\\custom-addons'
+
+======================================================================
+ERROR: test_snapshot_namespace_is_preserved_from_overlay (test_upstream_sync.UpstreamSyncTests.test_snapshot_namespace_is_preserved_from_overlay)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 826, in test_snapshot_namespace_is_preserved_from_overlay
+    state = sync.synchronize(
+            ^^^^^^^^^^^^^^^^^
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_snapshot_only_symlink_inside_preserved_path_is_allowed (test_upstream_sync.UpstreamSyncTests.test_snapshot_only_symlink_inside_preserved_path_is_allowed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 298, in test_snapshot_only_symlink_inside_preserved_path_is_allowed
+    os.symlink("helper.py", source / "scripts/tool.py")
+OSError: [WinError 1314] A required privilege is not held by the client: 'helper.py' -> 'C:\\Users\\agent\\AppData\\Local\\Temp\\tmp6_8bri5w\\source\\scripts\\tool.py'
+
+======================================================================
+ERROR: test_stale_path_with_destination_symlink_ancestor_is_rejected (test_upstream_sync.UpstreamSyncTests.test_stale_path_with_destination_symlink_ancestor_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 911, in test_stale_path_with_destination_symlink_ancestor_is_rejected
+    sync.synchronize(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_symlink_to_ancestor_of_destination_preserved_path_is_rejected (test_upstream_sync.UpstreamSyncTests.test_symlink_to_ancestor_of_destination_preserved_path_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 276, in test_symlink_to_ancestor_of_destination_preserved_path_is_rejected
+    os.symlink("tests", source / "alias")
+OSError: [WinError 1314] A required privilege is not held by the client: 'tests' -> 'C:\\Users\\agent\\AppData\\Local\\Temp\\tmpw9e0lhih\\source\\alias'
+
+======================================================================
+ERROR: test_symlink_to_destination_preserved_source_path_is_rejected (test_upstream_sync.UpstreamSyncTests.test_symlink_to_destination_preserved_source_path_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 252, in test_symlink_to_destination_preserved_source_path_is_rejected
+    os.symlink("scripts", source / "alias")
+OSError: [WinError 1314] A required privilege is not held by the client: 'scripts' -> 'C:\\Users\\agent\\AppData\\Local\\Temp\\tmpa415fesv\\source\\alias'
+
+======================================================================
+ERROR: test_symlinked_module_content_requires_explicit_disposition (test_upstream_sync.UpstreamSyncTests.test_symlinked_module_content_requires_explicit_disposition)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 535, in test_symlinked_module_content_requires_explicit_disposition
+    (source / "nested/addons/module_a/common.py").symlink_to(
+  File "C:\Users\agent\AppData\Local\Programs\Python\Python312\Lib\pathlib.py", line 1386, in symlink_to
+    os.symlink(target, self, target_is_directory)
+OSError: [WinError 1314] A required privilege is not held by the client: '..\\..\\..\\shared\\common.py' -> 'C:\\Users\\agent\\AppData\\Local\\Temp\\tmpuikd1916\\source\\nested\\addons\\module_a\\common.py'
+
+======================================================================
+ERROR: test_unmanaged_file_ancestor_is_rejected_before_overlay (test_upstream_sync.UpstreamSyncTests.test_unmanaged_file_ancestor_is_rejected_before_overlay) (prior_sync=True, child='docs/item/child.txt')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 408, in test_unmanaged_file_ancestor_is_rejected_before_overlay
+    sync.synchronize(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_unmanaged_file_ancestor_is_rejected_before_overlay (test_upstream_sync.UpstreamSyncTests.test_unmanaged_file_ancestor_is_rejected_before_overlay) (prior_sync=True, child='docs/item/sub/child.txt')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 408, in test_unmanaged_file_ancestor_is_rejected_before_overlay
+    sync.synchronize(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_verify_state_binds_recorded_commit_sha_to_tree (test_upstream_sync.UpstreamSyncTests.test_verify_state_binds_recorded_commit_sha_to_tree)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 758, in test_verify_state_binds_recorded_commit_sha_to_tree
+    state = sync.synchronize(
+            ^^^^^^^^^^^^^^^^^
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_verify_state_binds_snapshot_and_runtime_paths_to_policy (test_upstream_sync.UpstreamSyncTests.test_verify_state_binds_snapshot_and_runtime_paths_to_policy)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 699, in test_verify_state_binds_snapshot_and_runtime_paths_to_policy
+    sync.synchronize(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_verify_state_binds_snapshot_bytes_to_recorded_git_tree (test_upstream_sync.UpstreamSyncTests.test_verify_state_binds_snapshot_bytes_to_recorded_git_tree)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 726, in test_verify_state_binds_snapshot_bytes_to_recorded_git_tree
+    state = sync.synchronize(
+            ^^^^^^^^^^^^^^^^^
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_verify_state_derives_imported_modules_and_bytes_from_snapshot (test_upstream_sync.UpstreamSyncTests.test_verify_state_derives_imported_modules_and_bytes_from_snapshot)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 632, in test_verify_state_derives_imported_modules_and_bytes_from_snapshot
+    sync.synchronize(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_verify_state_recomputes_target_only_module_inventory (test_upstream_sync.UpstreamSyncTests.test_verify_state_recomputes_target_only_module_inventory)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 607, in test_verify_state_recomputes_target_only_module_inventory
+    sync.synchronize(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_verify_state_rejects_managed_destination_symlink_ancestor (test_upstream_sync.UpstreamSyncTests.test_verify_state_rejects_managed_destination_symlink_ancestor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 880, in test_verify_state_rejects_managed_destination_symlink_ancestor
+    sync.synchronize(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_verify_state_rejects_marker_provenance_drift (test_upstream_sync.UpstreamSyncTests.test_verify_state_rejects_marker_provenance_drift)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 327, in test_verify_state_rejects_marker_provenance_drift
+    sync.synchronize(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+======================================================================
+ERROR: test_verify_state_requires_complete_false_safety_evidence (test_upstream_sync.UpstreamSyncTests.test_verify_state_requires_complete_false_safety_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\tests\security\test_upstream_sync.py", line 673, in test_verify_state_requires_complete_false_safety_evidence
+    sync.synchronize(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 671, in synchronize
+    verify_state(destination=destination, policy_path=policy_path)
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 739, in verify_state
+    require(
+  File "C:\Users\agent\Documents\GitHub\Odoo.worktrees\mission1-foundation-20260918\scripts\sync_codestra_odoo_addons.py", line 47, in require
+    raise SyncError(message)
+scripts.sync_codestra_odoo_addons.SyncError: snapshot Git tree drift
+
+----------------------------------------------------------------------
+Ran 223 tests in 100.555s
+
+FAILED (errors=30)

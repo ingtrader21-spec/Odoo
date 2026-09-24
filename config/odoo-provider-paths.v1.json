@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "classifications": [
+    "MIDDLEWARE_CLIENT",
+    "IDENTITY_PROVIDER",
+    "READ_ONLY_PROJECTION",
+    "COMPATIBILITY",
+    "TEST",
+    "LEGACY",
+    "MIGRATE",
+    "REMOVE"
+  ],
+  "policy": {
+    "direct_provider_transport_allowed": false,
+    "forbidden_transport_modules": [
+      "smtplib",
+      "imaplib",
+      "twilio",
+      "telnyx",
+      "MySQLdb",
+      "pymysql",
+      "mysql.connector",
+      "xmlrpc.client"
+    ],
+    "outbound_http_sites_must_be_classified": true,
+    "new_command_execution_bypass_forbidden": true
+  },
+  "outbound_http_sites": [
+    {
+      "file": "codestra_middleware_bridge/models/bridge.py",
+      "target": "Middleware bridge base URL (ir.config_parameter)",
+      "classification": "MIDDLEWARE_CLIENT",
+      "canonical": true
+    },
+    {
+      "file": "codestra_middleware_bridge/models/agent_provisioning_transport.py",
+      "target": "Middleware agent provisioning API",
+      "classification": "MIDDLEWARE_CLIENT",
+      "canonical": true
+    },
+    {
+      "file": "codestra_vicidial_crm/models/middleware_client.py",
+      "target": "Middleware telephony/calling API and Keycloak token endpoint",
+      "classification": "MIDDLEWARE_CLIENT",
+      "canonical": false,
+      "note": "transitional telephony client; commands still terminate in Middleware"
+    },
+    {
+      "file": "codestra_vicidial_crm/models/calling_realtime.py",
+      "target": "Middleware calling realtime read-side (ORIGIN)",
+      "classification": "READ_ONLY_PROJECTION",
+      "canonical": false
+    },
+    {
+      "file": "codestra_vicidial_crm/controllers/call_control.py",
+      "target": "recording API (codestra.recording_api_internal_url) playback",
+      "classification": "READ_ONLY_PROJECTION",
+      "canonical": false
+    },
+    {
+      "file": "codestra_vicidial_recording/models/recording.py",
+      "target": "recording middleware playback-url API",
+      "classification": "READ_ONLY_PROJECTION",
+      "canonical": false
+    },
+    {
+      "file": "codestra_identity_provisioning/models/provisioning_service.py",
+      "target": "Middleware provisioning service",
+      "classification": "MIDDLEWARE_CLIENT",
+      "canonical": true
+    },
+    {
+      "file": "codestra_appointments/models/callback_sync.py",
+      "target": "Middleware callbacks/control API (base_url) and Keycloak token_url",
+      "classification": "MIDDLEWARE_CLIENT",
+      "canonical": false,
+      "note": "compatibility callback sync; same boundary"
+    },
+    {
+      "file": "codestra_email_middleware/transport.py",
+      "target": "Middleware email API",
+      "classification": "MIDDLEWARE_CLIENT",
+      "canonical": true
+    },
+    {
+      "file": "codestra_sms_middleware/transport.py",
+      "target": "Middleware SMS API",
+      "classification": "MIDDLEWARE_CLIENT",
+      "canonical": true
+    },
+    {
+      "file": "codestra_orbit_theme/controllers/sso.py",
+      "target": "Keycloak token endpoint (OIDC code exchange)",
+      "classification": "IDENTITY_PROVIDER",
+      "canonical": true
+    }
+  ],
+  "provider_named_source": {
+    "vicidial": {
+      "classification": "READ_ONLY_PROJECTION",
+      "note": "codestra.vicidial.* models, identity maps and readback projections; no VICIdial DB/API transport exists in source"
+    },
+    "klyrow": {
+      "classification": "READ_ONLY_PROJECTION",
+      "note": "Klyrow business projection and SMTP policy delivered by Middleware"
+    },
+    "telnexa": {
+      "classification": "COMPATIBILITY",
+      "note": "no source transport; SMS goes through codestra_sms_middleware"
+    },
+    "smtp": {
+      "classification": "COMPATIBILITY",
+      "note": "no smtplib use; email goes through codestra_email_middleware"
+    },
+    "asterisk_sip": {
+      "classification": "READ_ONLY_PROJECTION",
+      "note": "extension/SIP identifiers only; no PBX transport"
+    }
+  }
+}

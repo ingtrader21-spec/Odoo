@@ -1,0 +1,1239 @@
+{
+  "schema_version": 1,
+  "mission": "ODOO_MISSION_1_BUSINESS_OPERATIONS_FOUNDATION",
+  "source_head": "7a209c310f1940084ff9b6b4cdc4d83f1b1afe4e",
+  "classifications": [
+    "CANONICAL",
+    "SUPPORTING",
+    "COMPATIBILITY",
+    "LEGACY",
+    "TRANSITIONAL",
+    "DEPRECATED",
+    "RETIRE_CANDIDATE"
+  ],
+  "policy": {
+    "every_installable_module_must_be_classified": true,
+    "retire_candidates_are_not_deleted_by_this_mission": true,
+    "compatibility_and_transitional_modules_may_not_control_runtime_provisioning": true,
+    "duplicate_model_name_exceptions": {},
+    "duplicate_model_note": "codestra_integration_hub extends codestra.integration.event with _inherit (owner codestra_vicidial_crm); the DUPLICATE-MODEL-FACADE-AUDIT blocker is resolved in source and no second _name authority remains."
+  },
+  "module_count": 81,
+  "modules": {
+    "call_center_campaign": {
+      "classification": "CANONICAL",
+      "domain": "campaign",
+      "rationale": "Physical campaign record (call.center.campaign), Middleware integration API for the shared contract, runtime integration outbox/inbox, traces and nonces. Automatic design provisioning is present but its outbox cron ships inactive and unloaded; runtime provisioning authority belongs to the control plane.",
+      "version": "19.0.5.4.0",
+      "models": [
+        "call.center.campaign",
+        "call.center.campaign.country.policy",
+        "call.center.campaign.design.revision",
+        "call.center.campaign.mapping",
+        "call.center.pipeline",
+        "call.center.queue",
+        "call.center.script",
+        "call.center.skill.requirement",
+        "call.center.team",
+        "codestra.disposition",
+        "codestra.integration.callback.nonce",
+        "codestra.integration.result.inbox",
+        "codestra.integration.trace",
+        "codestra.runtime.integration.outbox"
+      ],
+      "routes": 22,
+      "sudo_sites": 40,
+      "has_tests": true
+    },
+    "call_center_compliance": {
+      "classification": "CANONICAL",
+      "domain": "compliance",
+      "rationale": "Compliance rules, consent and suppression (owner per DUPLICATE-MODEL-FACADE-AUDIT).",
+      "version": "19.0.1.0.0",
+      "models": [
+        "call.center.compliance.rule",
+        "call.center.consent",
+        "call.center.suppression"
+      ],
+      "routes": 0,
+      "sudo_sites": 1,
+      "has_tests": true
+    },
+    "call_center_core": {
+      "classification": "CANONICAL",
+      "domain": "foundation",
+      "rationale": "Business units, branches, audit events, calling-hours policy, journey/status vocabularies and the business-unit mixin every other module scopes on.",
+      "version": "19.0.2.1.0",
+      "models": [
+        "call.center.agent.skill",
+        "call.center.audit.event",
+        "call.center.branch",
+        "call.center.business.unit",
+        "call.center.business.unit.mixin",
+        "call.center.calendar.exception",
+        "call.center.calling.hours.decision",
+        "call.center.calling.hours.policy",
+        "call.center.canonical.status",
+        "call.center.department",
+        "call.center.feature.flag",
+        "call.center.operating.period",
+        "call.center.phone.format",
+        "call.center.scoped.audit.mixin",
+        "call.center.skill",
+        "call.center.skill.category",
+        "call.center.status.transition",
+        "call.center.status.transition.audit"
+      ],
+      "routes": 0,
+      "sudo_sites": 1,
+      "has_tests": true
+    },
+    "call_center_lead_validation": {
+      "classification": "SUPPORTING",
+      "domain": "leads",
+      "rationale": "Lead validation results.",
+      "version": "19.0.1.1.0",
+      "models": [
+        "call.center.duplicate.candidate"
+      ],
+      "routes": 0,
+      "sudo_sites": 1,
+      "has_tests": true
+    },
+    "call_center_orchestration": {
+      "classification": "COMPATIBILITY",
+      "domain": "provisioning",
+      "rationale": "Legacy call.center.provisioning.request, callback tasks and lead import batches; still a dependency of umbrella modules. It is not a provisioning authority.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "call.center.callback.notification",
+        "call.center.callback.task",
+        "call.center.credential.reference",
+        "call.center.lead.import.batch",
+        "call.center.lead.import.row",
+        "call.center.lead.mapping",
+        "call.center.lead.validation.result",
+        "call.center.provisioning.request"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra": {
+      "classification": "SUPPORTING",
+      "domain": "meta",
+      "rationale": "Umbrella module.",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": false
+    },
+    "codestra_admin_agent_workspace": {
+      "classification": "SUPPORTING",
+      "domain": "workspace",
+      "rationale": "Native admin/agent workspace screens.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.workspace.disposition.wizard"
+      ],
+      "routes": 0,
+      "sudo_sites": 5,
+      "has_tests": true
+    },
+    "codestra_agent_onboarding": {
+      "classification": "CANONICAL",
+      "domain": "agent",
+      "rationale": "codestra.agent.onboarding is the canonical agent business lifecycle; cc.webrtc.session holds WebRTC state; the Middleware provisioning client model is the onboarding-side intent.",
+      "version": "19.0.2.0.9",
+      "models": [
+        "cc.webrtc.session",
+        "codestra.agent.onboarding",
+        "codestra.agent.provisioning.middleware.client"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_ai_agent_assistant": {
+      "classification": "SUPPORTING",
+      "domain": "ai",
+      "rationale": "AI agent assistant (advisory).",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.ai.assistant.draft"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_ai_call_audit": {
+      "classification": "SUPPORTING",
+      "domain": "ai",
+      "rationale": "AI call audit (advisory, no models).",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": false
+    },
+    "codestra_ai_core": {
+      "classification": "SUPPORTING",
+      "domain": "ai",
+      "rationale": "AI core models (advisory).",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.ai.audit",
+        "codestra.ai.prompt.template",
+        "codestra.ai.provider",
+        "codestra.ai.task.type"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": false
+    },
+    "codestra_ai_qualification": {
+      "classification": "SUPPORTING",
+      "domain": "ai",
+      "rationale": "AI qualification (advisory, no models).",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": false
+    },
+    "codestra_ai_realtime_assistant": {
+      "classification": "SUPPORTING",
+      "domain": "ai",
+      "rationale": "AI realtime assistant (advisory, no models).",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": false
+    },
+    "codestra_ai_review": {
+      "classification": "SUPPORTING",
+      "domain": "ai",
+      "rationale": "AI review (advisory, no models).",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": false
+    },
+    "codestra_analytics_reporting": {
+      "classification": "SUPPORTING",
+      "domain": "reporting",
+      "rationale": "Analytics reporting.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.reporting.metric.definition",
+        "codestra.reporting.scope.mixin"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": false
+    },
+    "codestra_appointments": {
+      "classification": "SUPPORTING",
+      "domain": "call",
+      "rationale": "Appointments and callback synchronisation extending codestra.callback; outbound calls go to the Middleware callback API only.",
+      "version": "19.0.3.2.2",
+      "models": [
+        "codestra.appointment.reminder.event",
+        "codestra.appointment.reminder.policy",
+        "codestra.appointment.type",
+        "codestra.call.appointment",
+        "codestra.callback",
+        "codestra.callback.history",
+        "codestra.callback.sync.job"
+      ],
+      "routes": 0,
+      "sudo_sites": 5,
+      "has_tests": true
+    },
+    "codestra_base": {
+      "classification": "SUPPORTING",
+      "domain": "foundation",
+      "rationale": "Shared base models and helpers.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.audit.mixin",
+        "codestra.correlation.mixin",
+        "codestra.external.reference.mixin",
+        "codestra.feature.flags",
+        "codestra.sync.state.mixin"
+      ],
+      "routes": 0,
+      "sudo_sites": 3,
+      "has_tests": true
+    },
+    "codestra_campaign_control_plane": {
+      "classification": "CANONICAL",
+      "domain": "campaign_control",
+      "rationale": "Sole runtime provisioning/activation authority for campaigns: validated configuration versions, control commands, provisioning runs, readback receipts, pull-only Middleware delivery.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "cc.application",
+        "cc.campaign.configuration.version",
+        "cc.campaign.provisioning.run",
+        "cc.campaign.readback",
+        "cc.campaign.template",
+        "cc.campaign.template.version",
+        "cc.field.definition",
+        "cc.integration.binding",
+        "cc.profile.field.value",
+        "cc.workspace.item",
+        "cc.workspace.section"
+      ],
+      "routes": 18,
+      "sudo_sites": 20,
+      "has_tests": true
+    },
+    "codestra_campaign_crm_os": {
+      "classification": "TRANSITIONAL",
+      "domain": "campaign",
+      "rationale": "37 models including codestra.agent.profile, codestra.crm.outbox and codestra.campaign.* workflow objects; MIGRATE_AND_REMOVE pending live data and migration proof. It may not control runtime provisioning.",
+      "version": "19.0.1.4.0",
+      "models": [
+        "codestra.activity.timeline",
+        "codestra.agent.performance",
+        "codestra.agent.profile",
+        "codestra.agent.state.event",
+        "codestra.ai.task",
+        "codestra.automation.action.receipt",
+        "codestra.call.event",
+        "codestra.campaign.action.service",
+        "codestra.campaign.appointment.type",
+        "codestra.campaign.automation",
+        "codestra.campaign.communication",
+        "codestra.campaign.disposition.mapping",
+        "codestra.campaign.document",
+        "codestra.campaign.document.definition",
+        "codestra.campaign.followup.rule",
+        "codestra.campaign.knowledge.article",
+        "codestra.campaign.kpi",
+        "codestra.campaign.note",
+        "codestra.campaign.playbook",
+        "codestra.campaign.sla.service",
+        "codestra.campaign.status",
+        "codestra.campaign.transfer.policy",
+        "codestra.campaign.workflow",
+        "codestra.coaching.session",
+        "codestra.command.center.snapshot",
+        "codestra.contact.center.case",
+        "codestra.contact.center.complaint",
+        "codestra.contact.policy.service",
+        "codestra.crm.appointment",
+        "codestra.crm.outbox",
+        "codestra.daily.operations.report",
+        "codestra.lead.distribution.rule",
+        "codestra.qa.criterion",
+        "codestra.qa.review",
+        "codestra.qa.scorecard",
+        "codestra.work.queue.item",
+        "codestra.workforce.shift"
+      ],
+      "routes": 1,
+      "sudo_sites": 35,
+      "has_tests": true
+    },
+    "codestra_campaign_publishing": {
+      "classification": "TRANSITIONAL",
+      "domain": "campaign",
+      "rationale": "Campaign publishing tests over the staging design path.",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_case_management": {
+      "classification": "SUPPORTING",
+      "domain": "crm",
+      "rationale": "Case management.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.case"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_agent_desktop": {
+      "classification": "SUPPORTING",
+      "domain": "workspace",
+      "rationale": "Agent desktop composition.",
+      "version": "19.0.1.1.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_analytics": {
+      "classification": "SUPPORTING",
+      "domain": "reporting",
+      "rationale": "Analytics composition.",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_audit": {
+      "classification": "SUPPORTING",
+      "domain": "compliance",
+      "rationale": "Append-only audit ledger and audit service group.",
+      "version": "19.0.2.0.0",
+      "models": [
+        "cc.audit.event"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_automation": {
+      "classification": "SUPPORTING",
+      "domain": "automation",
+      "rationale": "Automation composition (no live execution).",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_calls": {
+      "classification": "CANONICAL",
+      "domain": "call",
+      "rationale": "Call operations: operation outbox, callbacks, appointments, transfers, referrals and their policies.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "cc.appointment",
+        "cc.callback",
+        "cc.callback.history",
+        "cc.callback.policy",
+        "cc.operation.outbox",
+        "cc.referral",
+        "cc.referral.delivery",
+        "cc.referral.route",
+        "cc.reminder",
+        "cc.transfer",
+        "cc.transfer.event",
+        "cc.transfer.route"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_campaign": {
+      "classification": "COMPATIBILITY",
+      "domain": "campaign",
+      "rationale": "Facade only (no models); keeps installation paths stable.",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_compliance": {
+      "classification": "SUPPORTING",
+      "domain": "compliance",
+      "rationale": "Separately named compliance evidence/policy models extending the canonical compliance owner (COMPATIBILITY_LAYER in the facade audit).",
+      "version": "19.0.2.0.0",
+      "models": [
+        "cc.compliance.policy",
+        "cc.consent.evidence",
+        "cc.contact.eligibility.evidence",
+        "cc.legal.hold",
+        "cc.payment.safety.event",
+        "cc.payment.safety.session",
+        "cc.retention.decision",
+        "cc.suppression.entry"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_core": {
+      "classification": "CANONICAL",
+      "domain": "campaign",
+      "rationale": "cc.campaign is the canonical campaign identity and lifecycle (delegating storage to call.center.campaign), with cc.business.unit, campaign channels and policies.",
+      "version": "19.0.2.0.0",
+      "models": [
+        "cc.business.unit",
+        "cc.campaign",
+        "cc.campaign.channel",
+        "cc.campaign.policy",
+        "cc.campaign.scoped.mixin"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_crm": {
+      "classification": "CANONICAL",
+      "domain": "crm",
+      "rationale": "CRM service group and lead ownership rules for the cc line.",
+      "version": "19.0.1.0.1",
+      "models": [
+        "cc.customer.profile"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_customer_360": {
+      "classification": "SUPPORTING",
+      "domain": "crm",
+      "rationale": "Customer 360 composition.",
+      "version": "19.0.1.1.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_disposition": {
+      "classification": "SUPPORTING",
+      "domain": "call",
+      "rationale": "Dispositions and sub-dispositions.",
+      "version": "19.0.2.0.0",
+      "models": [
+        "cc.disposition",
+        "cc.disposition.set",
+        "cc.script",
+        "cc.script.acknowledgement",
+        "cc.script.version"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_helpdesk": {
+      "classification": "SUPPORTING",
+      "domain": "crm",
+      "rationale": "Helpdesk tickets.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "cc.helpdesk.queue",
+        "cc.helpdesk.sla.policy",
+        "cc.helpdesk.ticket"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_identity": {
+      "classification": "CANONICAL",
+      "domain": "identity",
+      "rationale": "Identity outbox, session scope and reassignment records that propagate Odoo-side identity intent to Middleware; Keycloak stays the identity database.",
+      "version": "19.0.2.0.0",
+      "models": [
+        "cc.identity.outbox",
+        "cc.identity.reassignment",
+        "cc.identity.session.scope"
+      ],
+      "routes": 2,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_mail": {
+      "classification": "CANONICAL",
+      "domain": "email",
+      "rationale": "Mail sender identity, mailboxes and mail ingestion service group.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "cc.mail.distribution.group",
+        "cc.mail.distribution.membership",
+        "cc.mail.inbound.event",
+        "cc.mail.quarantine",
+        "cc.mail.route",
+        "cc.mail.sender.identity",
+        "cc.mail.thread"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_mailbox": {
+      "classification": "SUPPORTING",
+      "domain": "email",
+      "rationale": "Mailbox composition.",
+      "version": "19.0.1.1.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_omnichannel": {
+      "classification": "SUPPORTING",
+      "domain": "crm",
+      "rationale": "Omnichannel composition.",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_quality": {
+      "classification": "SUPPORTING",
+      "domain": "quality",
+      "rationale": "QA scorecards and reviews.",
+      "version": "19.0.2.0.0",
+      "models": [
+        "cc.coaching.plan",
+        "cc.quality.answer",
+        "cc.quality.calibration",
+        "cc.quality.dispute",
+        "cc.quality.evaluation",
+        "cc.quality.event",
+        "cc.quality.program",
+        "cc.quality.question",
+        "cc.quality.sample"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_recordings": {
+      "classification": "SUPPORTING",
+      "domain": "call",
+      "rationale": "Recording read-side and recording service group.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "cc.recording",
+        "cc.recording.access.event",
+        "cc.recording.policy",
+        "cc.recording.retention.event"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_reliability": {
+      "classification": "SUPPORTING",
+      "domain": "observability",
+      "rationale": "Reliability composition.",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_reporting": {
+      "classification": "SUPPORTING",
+      "domain": "reporting",
+      "rationale": "Reporting projections.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "cc.kpi.definition",
+        "cc.kpi.snapshot",
+        "cc.reporting.export.event",
+        "cc.reporting.policy"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_security": {
+      "classification": "CANONICAL",
+      "domain": "roles",
+      "rationale": "Canonical group set (group_cc_*), campaign membership and break-glass grants that every cc record rule resolves through.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "cc.break.glass.grant",
+        "cc.campaign.membership"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_supervisor": {
+      "classification": "SUPPORTING",
+      "domain": "workspace",
+      "rationale": "Supervisor landing composition.",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_vicidial": {
+      "classification": "TRANSITIONAL",
+      "domain": "telephony_projection",
+      "rationale": "Telephony readback service group and VICIdial projections; commands never originate here.",
+      "version": "19.0.2.0.0",
+      "models": [
+        "cc.telephony.mapping",
+        "cc.telephony.middleware.contract",
+        "cc.telephony.readback"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_wfm": {
+      "classification": "SUPPORTING",
+      "domain": "workforce",
+      "rationale": "Workforce management and workforce event service group.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "cc.workforce.adherence.event",
+        "cc.workforce.exception",
+        "cc.workforce.exception.event",
+        "cc.workforce.forecast",
+        "cc.workforce.policy",
+        "cc.workforce.realtime.snapshot",
+        "cc.workforce.schedule",
+        "cc.workforce.schedule.change"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_cc_workforce": {
+      "classification": "SUPPORTING",
+      "domain": "workforce",
+      "rationale": "Workforce projections.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.cc.shift"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_client_operations": {
+      "classification": "SUPPORTING",
+      "domain": "crm",
+      "rationale": "Client operations.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.client.contract",
+        "codestra.client.sla"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_client_portal": {
+      "classification": "SUPPORTING",
+      "domain": "portal",
+      "rationale": "Client portal.",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_daily_reporting": {
+      "classification": "SUPPORTING",
+      "domain": "reporting",
+      "rationale": "Daily operations reports.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.daily.report",
+        "codestra.daily.report.action",
+        "codestra.daily.report.data.quality",
+        "codestra.daily.report.delivery",
+        "codestra.daily.report.metric",
+        "codestra.daily.report.recipient",
+        "codestra.daily.report.section",
+        "codestra.daily.report.snapshot"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": false
+    },
+    "codestra_data_quality": {
+      "classification": "SUPPORTING",
+      "domain": "leads",
+      "rationale": "Data-quality checks.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.data.quality.issue"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_email_middleware": {
+      "classification": "CANONICAL",
+      "domain": "email",
+      "rationale": "Email outbox and Middleware email transport.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.email.outbox"
+      ],
+      "routes": 0,
+      "sudo_sites": 11,
+      "has_tests": true
+    },
+    "codestra_identity_provisioning": {
+      "classification": "CANONICAL",
+      "domain": "provisioning",
+      "rationale": "Agent/user provisioning requests and steps, identity links to Keycloak subjects, extension pools/assignments, channel entitlements, tenants and credential references.",
+      "version": "19.0.1.8.1",
+      "models": [
+        "codestra.agent.channel",
+        "codestra.company.mailbox",
+        "codestra.credential.reference",
+        "codestra.email.domain",
+        "codestra.extension.assignment",
+        "codestra.extension.pool",
+        "codestra.identifier.reservation",
+        "codestra.identity.link",
+        "codestra.platform.user",
+        "codestra.private.provisioning.service",
+        "codestra.provisioning.audit",
+        "codestra.provisioning.inbound.group",
+        "codestra.provisioning.request",
+        "codestra.provisioning.step",
+        "codestra.provisioning.wizard",
+        "codestra.provisioning.wizard.line",
+        "codestra.role.template",
+        "codestra.tenant",
+        "codestra.tenant.membership"
+      ],
+      "routes": 2,
+      "sudo_sites": 11,
+      "has_tests": true
+    },
+    "codestra_intake_leads": {
+      "classification": "SUPPORTING",
+      "domain": "leads",
+      "rationale": "Intake lead identity and projection via Middleware.",
+      "version": "19.0.1.2.0",
+      "models": [
+        "codestra.intake.identity",
+        "codestra.intake.receipt"
+      ],
+      "routes": 0,
+      "sudo_sites": 4,
+      "has_tests": true
+    },
+    "codestra_integration_hub": {
+      "classification": "RETIRE_CANDIDATE",
+      "domain": "inbox_outbox",
+      "rationale": "Duplicate codestra.integration.event and a second delivery/idempotency implementation; MIGRATE_AND_REMOVE per the facade audit unless live reconciliation proves it required.",
+      "version": "19.0.1.0.2",
+      "models": [
+        "codestra.integration.audit.chain.lock",
+        "codestra.integration.delivery",
+        "codestra.integration.endpoint",
+        "codestra.integration.event",
+        "codestra.integration.event.service",
+        "codestra.integration.idempotency",
+        "codestra.integration.idempotency.service"
+      ],
+      "routes": 0,
+      "sudo_sites": 1,
+      "has_tests": true
+    },
+    "codestra_interaction_workflow": {
+      "classification": "SUPPORTING",
+      "domain": "crm",
+      "rationale": "Interaction workflow read-only operations.",
+      "version": "19.0.1.0.1",
+      "models": [
+        "codestra.integration.activation.request",
+        "codestra.integration.dashboard",
+        "codestra.integration.retry.request"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_ivr_control": {
+      "classification": "SUPPORTING",
+      "domain": "telephony_projection",
+      "rationale": "IVR control models (no runtime dial path).",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.ivr.destination",
+        "codestra.ivr.did.mapping",
+        "codestra.ivr.menu",
+        "codestra.ivr.option",
+        "codestra.ivr.scoped.mixin",
+        "codestra.ivr.session"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": false
+    },
+    "codestra_klyrow_smtp": {
+      "classification": "SUPPORTING",
+      "domain": "email",
+      "rationale": "Klyrow SMTP policy projected from Middleware; no direct SMTP transport.",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 14,
+      "has_tests": true
+    },
+    "codestra_kyqra_review_hub": {
+      "classification": "SUPPORTING",
+      "domain": "business_line",
+      "rationale": "Kyqra review hub (read-only projections).",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.kyqra.batch",
+        "codestra.kyqra.entity",
+        "codestra.kyqra.evidence"
+      ],
+      "routes": 0,
+      "sudo_sites": 5,
+      "has_tests": true
+    },
+    "codestra_lead_automation": {
+      "classification": "SUPPORTING",
+      "domain": "leads",
+      "rationale": "Lead automation and channel eligibility.",
+      "version": "19.0.2.0.0",
+      "models": [
+        "codestra.lead.automation.config",
+        "codestra.lead.automation.execution",
+        "codestra.lead.automation.nonce",
+        "codestra.lead.automation.policy",
+        "codestra.lead.automation.receipt",
+        "codestra.lead.callback.request",
+        "codestra.lead.channel.eligibility",
+        "codestra.lead.consent.snapshot"
+      ],
+      "routes": 1,
+      "sudo_sites": 5,
+      "has_tests": true
+    },
+    "codestra_lead_ingestion": {
+      "classification": "SUPPORTING",
+      "domain": "leads",
+      "rationale": "Lead import outbox and ingestion.",
+      "version": "19.0.1.0.1",
+      "models": [
+        "codestra.lead.column.mapping",
+        "codestra.lead.column.mapping.line",
+        "codestra.lead.import.audit",
+        "codestra.lead.import.batch",
+        "codestra.lead.import.line",
+        "codestra.lead.import.outbox"
+      ],
+      "routes": 0,
+      "sudo_sites": 13,
+      "has_tests": true
+    },
+    "codestra_login_branding": {
+      "classification": "SUPPORTING",
+      "domain": "identity_ui",
+      "rationale": "Login branding.",
+      "version": "19.0.1.0.1",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_mail_inbox": {
+      "classification": "SUPPORTING",
+      "domain": "email",
+      "rationale": "Mail inbox records.",
+      "version": "19.0.1.2.0",
+      "models": [
+        "codestra.mail.audit",
+        "codestra.mail.brand",
+        "codestra.mail.conversation",
+        "codestra.mail.inbound.event",
+        "codestra.mail.quarantine",
+        "codestra.mail.queue.type",
+        "codestra.mail.sender.allowlist",
+        "codestra.mail.sla.policy",
+        "codestra.mail.stage",
+        "codestra.mail.team"
+      ],
+      "routes": 0,
+      "sudo_sites": 7,
+      "has_tests": true
+    },
+    "codestra_marketing_crm": {
+      "classification": "SUPPORTING",
+      "domain": "business_line",
+      "rationale": "Marketing CRM system-of-record contract.",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_metrics": {
+      "classification": "SUPPORTING",
+      "domain": "observability",
+      "rationale": "Prometheus metrics route.",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 1,
+      "sudo_sites": 6,
+      "has_tests": true
+    },
+    "codestra_middleware_bridge": {
+      "classification": "CANONICAL",
+      "domain": "middleware_boundary",
+      "rationale": "Canonical Odoo -> Middleware client boundary: middleware request/outbound records, agent provisioning transport, CRM/customer/ticket/Klyrow projection routes.",
+      "version": "19.0.2.5.0",
+      "models": [
+        "codestra.crm.external.mapping",
+        "codestra.email.delivery.status",
+        "codestra.klyrow.business.projection",
+        "codestra.middleware.agent.provisioning.transport",
+        "codestra.middleware.outbound",
+        "codestra.middleware.request"
+      ],
+      "routes": 21,
+      "sudo_sites": 7,
+      "has_tests": true
+    },
+    "codestra_moneybee_crm": {
+      "classification": "SUPPORTING",
+      "domain": "business_line",
+      "rationale": "MoneyBee CRM projection over the Middleware bridge.",
+      "version": "19.0.1.2.1",
+      "models": [
+        "codestra.moneybee.integration.receipt"
+      ],
+      "routes": 0,
+      "sudo_sites": 1,
+      "has_tests": true
+    },
+    "codestra_observability_integration": {
+      "classification": "SUPPORTING",
+      "domain": "observability",
+      "rationale": "Observability incidents/KPIs projection API for Middleware.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "kyyow.observability.incident",
+        "kyyow.observability.incident.event",
+        "kyyow.observability.kpi.snapshot"
+      ],
+      "routes": 5,
+      "sudo_sites": 3,
+      "has_tests": true
+    },
+    "codestra_odoo_certification": {
+      "classification": "COMPATIBILITY",
+      "domain": "certification",
+      "rationale": "Certification fixtures and readiness projections.",
+      "version": "19.0.1.1.0",
+      "models": [
+        "codestra.crm.mutation"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_orbit_theme": {
+      "classification": "SUPPORTING",
+      "domain": "identity_ui",
+      "rationale": "Orbit theme and Keycloak SSO login/callback/logout routes (identity lives in Keycloak).",
+      "version": "19.0.1.3.0",
+      "models": [],
+      "routes": 4,
+      "sudo_sites": 6,
+      "has_tests": true
+    },
+    "codestra_revenue_assurance": {
+      "classification": "SUPPORTING",
+      "domain": "reporting",
+      "rationale": "Revenue assurance.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.billing.usage",
+        "codestra.rate.plan"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_scrapper_projection": {
+      "classification": "SUPPORTING",
+      "domain": "business_line",
+      "rationale": "Scrapper projection (read-only).",
+      "version": "19.0.1.1.0",
+      "models": [
+        "codestra.scrapper.business",
+        "codestra.scrapper.projection.receipt"
+      ],
+      "routes": 0,
+      "sudo_sites": 9,
+      "has_tests": true
+    },
+    "codestra_sms_middleware": {
+      "classification": "CANONICAL",
+      "domain": "sms",
+      "rationale": "SMS outbox and Middleware SMS transport; live delivery disabled by default.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.sms.outbox"
+      ],
+      "routes": 0,
+      "sudo_sites": 15,
+      "has_tests": true
+    },
+    "codestra_social_orchestration": {
+      "classification": "SUPPORTING",
+      "domain": "business_line",
+      "rationale": "Social orchestration models.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.social.analytics",
+        "codestra.social.approval",
+        "codestra.social.campaign",
+        "codestra.social.channel",
+        "codestra.social.failure",
+        "codestra.social.media",
+        "codestra.social.post",
+        "codestra.social.publication"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_staging_campaign_design": {
+      "classification": "TRANSITIONAL",
+      "domain": "campaign",
+      "rationale": "Staging campaign design previews; revision-bound and pull-only.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.campaign.design.profile"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_telephony_bridge": {
+      "classification": "CANONICAL",
+      "domain": "telephony_readback",
+      "rationale": "Telephony readback and reconciliation boundary bound to the pinned calling contract.",
+      "version": "19.0.1.2.0",
+      "models": [
+        "codestra.integration.reconciliation.drift",
+        "codestra.integration.reconciliation.run",
+        "codestra.telephony.desired.state",
+        "codestra.telephony.target.mapping",
+        "codestra.telephony.transfer.request",
+        "codestra.telephony.transfer.transition"
+      ],
+      "routes": 7,
+      "sudo_sites": 9,
+      "has_tests": true
+    },
+    "codestra_training_academy": {
+      "classification": "SUPPORTING",
+      "domain": "workforce",
+      "rationale": "Training academy.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.training.course",
+        "codestra.training.enrollment"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_transcription": {
+      "classification": "SUPPORTING",
+      "domain": "ai",
+      "rationale": "Transcription records.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.call.transcript",
+        "codestra.call.transcript.scope.mixin",
+        "codestra.call.transcript.segment"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": false
+    },
+    "codestra_vicidial_connector": {
+      "classification": "TRANSITIONAL",
+      "domain": "telephony_projection",
+      "rationale": "Connector projections over codestra_integration_hub; retires with it.",
+      "version": "19.0.1.0.0",
+      "models": [
+        "codestra.vicidial.connector.import.batch",
+        "codestra.vicidial.connector.import.line",
+        "codestra.vicidial.connector.normalizer",
+        "codestra.vicidial.connector.profile"
+      ],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    },
+    "codestra_vicidial_crm": {
+      "classification": "TRANSITIONAL",
+      "domain": "telephony_projection",
+      "rationale": "Owner of codestra.callback, codestra.vicidial.* projections, calling realtime read-side, call control routes and the Middleware calling client. Canonical for the legacy event model per the facade audit; command execution stays with Middleware.",
+      "version": "19.0.3.8.2",
+      "models": [
+        "codestra.call.coaching",
+        "codestra.call.control.command",
+        "codestra.call.event.projection.policy",
+        "codestra.call.note",
+        "codestra.call.note.revision",
+        "codestra.call.note.template",
+        "codestra.call.qa.review",
+        "codestra.call.sub.disposition",
+        "codestra.callback",
+        "codestra.calling.reconciliation",
+        "codestra.integration.audit",
+        "codestra.integration.dead.letter",
+        "codestra.integration.event",
+        "codestra.integration.mapping",
+        "codestra.retry.event.wizard",
+        "codestra.sync.preview.wizard",
+        "codestra.telephony.middleware.client",
+        "codestra.vicidial.agent",
+        "codestra.vicidial.call",
+        "codestra.vicidial.call.event",
+        "codestra.vicidial.campaign",
+        "codestra.vicidial.disposition",
+        "codestra.vicidial.phone",
+        "codestra.vicidial.queue.snapshot",
+        "codestra.vicidial.recording",
+        "codestra.vicidial.sync.event",
+        "codestra.vicidial.test.syn.repair",
+        "codestra.vicidial.transfer",
+        "vicidial.email.endpoint",
+        "vicidial.identity.map",
+        "vicidial.phone.endpoint",
+        "vicidial.reconciliation.issue",
+        "vicidial.sync.run"
+      ],
+      "routes": 30,
+      "sudo_sites": 52,
+      "has_tests": true
+    },
+    "codestra_vicidial_recording": {
+      "classification": "TRANSITIONAL",
+      "domain": "telephony_projection",
+      "rationale": "Recording projection and playback via the recording middleware API.",
+      "version": "19.0.1.0.1",
+      "models": [
+        "codestra.vicidial.recording.api.idempotency",
+        "codestra.vicidial.recording.api.nonce",
+        "codestra.vicidial.recording.playback.audit",
+        "codestra.vicidial.recording.retention.audit",
+        "codestra.vicidial.recording.scope.group"
+      ],
+      "routes": 3,
+      "sudo_sites": 12,
+      "has_tests": true
+    },
+    "codestra_workspace_theme": {
+      "classification": "SUPPORTING",
+      "domain": "ui",
+      "rationale": "Workspace theme.",
+      "version": "19.0.1.0.0",
+      "models": [],
+      "routes": 0,
+      "sudo_sites": 0,
+      "has_tests": true
+    }
+  }
+}
